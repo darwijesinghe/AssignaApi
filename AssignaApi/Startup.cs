@@ -1,19 +1,19 @@
 using AssignaApi.Data;
+using AssignaApi.Helpers;
+using AssignaApi.Interfaces;
+using AssignaApi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
-using AssignaApi.Interfaces;
-using AssignaApi.Services;
-using AssignaApi.Helpers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Text;
 
 namespace AssignaApi
 {
@@ -75,8 +75,10 @@ namespace AssignaApi
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = key,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidIssuer = _configuration.GetSection("JWTConfig:Issuer").Value,
+                    ValidateAudience = true,
+                    ValidAudience = _configuration.GetSection("JWTConfig:Audience").Value,
                     RequireExpirationTime = true,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
@@ -101,32 +103,29 @@ namespace AssignaApi
             // JWT helper
             services.AddScoped<JwtHelpers>();
 
-            #endregion
-
+            #endregion dependency services
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
-
                 app.UseDeveloperExceptionPage();
-
-                // use swagger UI
-                app.UseSwagger();
-                app.UseSwaggerUI(swg =>
-                {
-                    swg.SwaggerEndpoint("/swagger/v1/swagger.json", "AssignaApi v1");
-                    //swg.RoutePrefix = string.Empty;
-                });
             }
             else
             {
                 // unhandle error handeling
                 app.UseExceptionHandler("/error");
             }
+
+            // use swagger UI
+            app.UseSwagger();
+            app.UseSwaggerUI(swg =>
+            {
+                swg.SwaggerEndpoint("/swagger/v1/swagger.json", "AssignaApi v1");
+                swg.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
 
