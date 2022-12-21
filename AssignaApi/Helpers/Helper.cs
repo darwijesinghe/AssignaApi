@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +25,25 @@ namespace AssignaApi.Helpers
             {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
+            }
+        }
+
+        // validation filter
+        public class FutureDateAttribute : ValidationAttribute
+        {
+
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+
+                // check task date is future date or not
+
+                var date = Convert.ToDateTime(value);
+                if (date.Date < DateTime.Now.Date)
+                {
+                    return new ValidationResult(ErrorMessage);
+                }
+
+                return ValidationResult.Success;
             }
         }
 

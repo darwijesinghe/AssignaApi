@@ -96,6 +96,16 @@ namespace AssignaApi.Controllers
         public async Task<IActionResult> TaskInfo(int taskId)
         {
             var result = await _dataService.TaskInfo(taskId);
+            if (result.Count == 0)
+            {
+                return new JsonResult(new
+                {
+                    message = "Requested task is not found",
+                    success = false
+                });
+
+            }
+
             return new JsonResult(new
             {
                 data = result
@@ -106,6 +116,39 @@ namespace AssignaApi.Controllers
         [HttpPost("add-task")]
         public async Task<JsonResult> AddTask([FromBody] NewTask data)
         {
+            // validations
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult(new
+                {
+                    message = "Required data is not found",
+                    success = false
+                });
+            }
+
+            // check category
+            var category = _dataService.AllCategories();
+            if (!category.Any(x => x.cat_id == data.tsk_category))
+            {
+                return new JsonResult(new
+                {
+                    message = "Category id is not valid",
+                    success = false
+                });
+            }
+
+            // check assignee
+            var member = _dataService.TeamMembers();
+            if (!member.Any(x => x.user_id == data.member))
+            {
+                return new JsonResult(new
+                {
+                    message = "Member id is not valid",
+                    success = false
+                });
+            }
+
+
             // send data to save a new task
             var task = new TaskDto()
             {
@@ -144,6 +187,16 @@ namespace AssignaApi.Controllers
         [HttpPost("edit-task")]
         public async Task<JsonResult> EditTask([FromBody] EditTask data)
         {
+            // validations
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult(new
+                {
+                    message = "Required data is not found",
+                    success = false
+                });
+            }
+
             // check task is already completed or not
             var complete = await _dataService.TaskInfo(data.tsk_id);
             if (complete.Count > 0)
@@ -157,6 +210,37 @@ namespace AssignaApi.Controllers
                     });
                 }
             }
+            else
+            {
+                return new JsonResult(new
+                {
+                    message = "Task is not found to edit",
+                    success = false
+                });
+            }
+
+            // check category
+            var category = _dataService.AllCategories();
+            if (!category.Any(x => x.cat_id == data.tsk_category))
+            {
+                return new JsonResult(new
+                {
+                    message = "Category id is not valid",
+                    success = false
+                });
+            }
+
+            // check assignee
+            var member = _dataService.TeamMembers();
+            if (!member.Any(x => x.user_id == data.member))
+            {
+                return new JsonResult(new
+                {
+                    message = "Member id is not valid",
+                    success = false
+                });
+            }
+
 
             // send data to save a new task
             var task = new TaskDto()
@@ -196,6 +280,27 @@ namespace AssignaApi.Controllers
         [HttpPost("delete-task")]
         public async Task<JsonResult> DeleteTask([FromBody] DeleteTask data)
         {
+            // validations
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult(new
+                {
+                    message = "Required data is not found",
+                    success = false
+                });
+            }
+
+            var task = await _dataService.TaskInfo(data.tsk_id);
+            if (task.Count == 0)
+            {
+                return new JsonResult(new
+                {
+                    message = "Task is not found to delete",
+                    success = false
+                });
+
+            }
+
             var result = await _dataService.DeleteTaskAsync(data);
             if (result.success)
             {
@@ -219,6 +324,16 @@ namespace AssignaApi.Controllers
         [HttpPost("send-remind")]
         public async Task<JsonResult> SendReminder([FromBody] Reminder data)
         {
+            // validations
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult(new
+                {
+                    message = "Required data is not found",
+                    success = false
+                });
+            }
+
             // check task is already completed or not
             var complete = await _dataService.TaskInfo(data.tsk_id);
             if (complete.Count > 0)
@@ -235,7 +350,7 @@ namespace AssignaApi.Controllers
 
             // get user email
             var task = await _dataService.TaskInfo(data.tsk_id);
-            if (task is not null)
+            if (task.Count > 0)
             {
                 // mail subject
                 string subject = "Assigna API task reminder";
@@ -268,7 +383,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Task is not found",
+                    message = "Task is not found to send a remind",
                     success = false
                 });
             }

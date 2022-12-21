@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace AssignaApi
 {
@@ -77,7 +78,8 @@ namespace AssignaApi
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     RequireExpirationTime = true,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
@@ -106,17 +108,19 @@ namespace AssignaApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
+
+                app.UseDeveloperExceptionPage();
+
                 // use swagger UI
                 app.UseSwagger();
                 app.UseSwaggerUI(swg =>
                 {
                     swg.SwaggerEndpoint("/swagger/v1/swagger.json", "AssignaApi v1");
-                    swg.RoutePrefix = string.Empty;
+                    //swg.RoutePrefix = string.Empty;
                 });
-
-                app.UseDeveloperExceptionPage();
             }
             else
             {

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using static AssignaApi.Helpers.Helper;
 
 namespace AssignaApi.Models
 {
@@ -68,7 +69,7 @@ namespace AssignaApi.Models
         [Required(ErrorMessage = "Task category is required")]
         public int tsk_category { get; set; }
         [Required(ErrorMessage = "Task due date is required")]
-        [RegularExpression(@"^\d\d\d\d-\d\d-\d\d$", ErrorMessage = "Date format is not valid, valid format is yyyy-MM-dd")]
+        [FutureDate(ErrorMessage ="Task due date should be future date")]
         public DateTime deadline { get; set; }
         [Required(ErrorMessage = "Task priority is required")]
         public string priority { get; set; } = null!;
@@ -80,7 +81,7 @@ namespace AssignaApi.Models
 
     }
 
-    // add a new task
+    // edit a task
     public class EditTask
     {
         [Required(ErrorMessage = "Task id is required")]
@@ -91,7 +92,7 @@ namespace AssignaApi.Models
         [Required(ErrorMessage = "Task category is required")]
         public int tsk_category { get; set; }
         [Required(ErrorMessage = "Task due date is required")]
-        [RegularExpression(@"^\d\d\d\d-\d\d-\d\d$", ErrorMessage = "Date format is not valid, valid format is yyyy-MM-dd")]
+        [FutureDate(ErrorMessage = "Task due date should be future date")]
         public DateTime deadline { get; set; }
         [Required(ErrorMessage = "Task priority is required")]
         public string priority { get; set; } = null!;

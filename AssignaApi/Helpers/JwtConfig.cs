@@ -34,7 +34,7 @@ namespace AssignaApi.Helpers
                 new Claim(JwtRegisteredClaimNames.Email, mail),
                 new Claim("role", (role == Roles.lead) ? Roles.lead : Roles.member),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString())
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())
             };
 
             // JWT secret
@@ -44,14 +44,17 @@ namespace AssignaApi.Helpers
             // signing credentials
             var siCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            // expire time
+            var minutes = TimeSpan.Parse(_jwtConfig.Expire).Minutes;
+
             // setup token
             var token = new JwtSecurityToken
             (
                 audience: _jwtConfig.Audience,
                 issuer: _jwtConfig.Issuer,
                 claims: claims,
-                notBefore: DateTime.Now.ToUniversalTime(),
-                expires: DateTime.Now.ToUniversalTime().Add(TimeSpan.Parse(_jwtConfig.Expire)),
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddMinutes(minutes),
                 signingCredentials: siCredentials
             );
 

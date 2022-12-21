@@ -8,6 +8,7 @@ using AssignaApi.Interfaces;
 using AssignaApi.Models;
 using AssignaApi.Response;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Task = AssignaApi.Models.Task;
 
 namespace AssignaApi.Services
@@ -21,12 +22,14 @@ namespace AssignaApi.Services
         private DataContext _context { get; }
         private readonly Helper _helper;
         private readonly JwtHelpers _jwtHelpers;
+        private readonly JwtConfig _jwtConfig;
         public DataService(DataContext context, Helper helper,
-        JwtHelpers jwtHelpers)
+        JwtHelpers jwtHelpers, IOptions<JwtConfig> jwtConfig)
         {
             _context = context;
             _helper = helper;
             _jwtHelpers = jwtHelpers;
+            _jwtConfig = jwtConfig.Value;
         }
 
         // new user register
@@ -50,6 +53,9 @@ namespace AssignaApi.Services
             // refresh token
             string refToken = _jwtHelpers.GenerateRandomToken(100);
 
+            // expire time
+            var minutes = TimeSpan.Parse(_jwtConfig.Expire).Minutes;
+
             var user = new Users()
             {
                 user_name = data.user_name ?? empty,
@@ -59,8 +65,9 @@ namespace AssignaApi.Services
                 password_salt = passwordSalt,
                 is_admin = (data.role == Roles.lead) ? true : false,
                 verify_token = jwtToken,
+                expires_at = DateTime.Now.AddMinutes(minutes),
                 refresh_token = refToken,
-                refresh_expires = DateTime.Now.ToUniversalTime().AddMonths(1)
+                refresh_expires = DateTime.Now.AddMonths(1)
             };
 
             _context.users.Add(user);
@@ -98,6 +105,7 @@ namespace AssignaApi.Services
                 password_hash = x.password_hash,
                 password_salt = x.password_salt,
                 verify_token = x.verify_token,
+                expires_at = x.expires_at,
                 refresh_token = x.refresh_token,
                 refresh_expires = x.refresh_expires,
                 reset_token = x.reset_token,
@@ -120,7 +128,7 @@ namespace AssignaApi.Services
             );
 
             user.reset_token = _jwtHelpers.GenerateRandomToken(100);
-            user.reset_expires = DateTime.Now.ToUniversalTime().AddDays(1);
+            user.reset_expires = DateTime.Now.AddDays(1);
 
             try
             {
@@ -203,9 +211,13 @@ namespace AssignaApi.Services
             // refresh token
             string refToken = _jwtHelpers.GenerateRandomToken(100);
 
+            // expire time
+            var minutes = TimeSpan.Parse(_jwtConfig.Expire).Minutes;
+
             user.verify_token = jwtToken;
+            user.expires_at = DateTime.Now.AddMinutes(minutes);
             user.refresh_token = refToken;
-            user.refresh_expires = DateTime.Now.ToUniversalTime().AddMonths(1);
+            user.refresh_expires = DateTime.Now.AddMonths(1);
 
             try
             {

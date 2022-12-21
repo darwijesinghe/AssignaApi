@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace AssignaApi.Models
 {
@@ -15,17 +13,14 @@ namespace AssignaApi.Models
         public string pri_name { get; set; } = null!;
         public DateTime insertdate { get; set; }
 
-        // relationships
-        [JsonIgnore]
-        public List<Task>? task { get; set; }
     }
 
     // priority levels
     public static class PriLevels
     {
-        public const string high = "High Priority";
-        public const string medium = "Medium Priority";
-        public const string low = "Low Priority";
+        public const string high = "High";
+        public const string medium = "Medium";
+        public const string low = "Low";
     }
 
     // data transferring model -> DTO

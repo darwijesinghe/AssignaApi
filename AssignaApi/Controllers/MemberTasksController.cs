@@ -93,6 +93,15 @@ namespace AssignaApi.Controllers
         [HttpPost("write-note")]
         public async Task<JsonResult> WriteNote([FromBody] AddNote data)
         {
+            // validations
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult(new
+                {
+                    message = "Required data is not found",
+                    success = false
+                });
+            }
 
             // check task is already completed or not
             var complete = await _dataService.TaskInfo(data.tsk_id);
@@ -106,6 +115,14 @@ namespace AssignaApi.Controllers
                         success = false
                     });
                 }
+            }
+            else
+            {
+                return new JsonResult(new
+                {
+                    message = "Task is not found to add a note",
+                    success = false
+                });
             }
 
             // send data to add task note
@@ -138,6 +155,26 @@ namespace AssignaApi.Controllers
         [HttpPost("mark-done")]
         public async Task<JsonResult> MarkasDone([FromBody] MarkDone data)
         {
+            // validations
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult(new
+                {
+                    message = "Required data is not found",
+                    success = false
+                });
+            }
+
+            var task = await _dataService.TaskInfo(data.tsk_id);
+            if (task.Count == 0)
+            {
+                return new JsonResult(new
+                {
+                    message = "Task is not found to mark as done",
+                    success = false
+                });
+
+            }
 
             var result = await _dataService.MarkasDone(data);
             if (result.success)

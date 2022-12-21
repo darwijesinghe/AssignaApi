@@ -21,6 +21,7 @@ namespace AssignaApi.Models
         public byte[] password_hash { get; set; } = new byte[32];
         public byte[] password_salt { get; set; } = new byte[32];
         public string verify_token { get; set; } = string.Empty;
+        public DateTime expires_at { get; set; }
         public string refresh_token { get; set; } = string.Empty;
         public DateTime refresh_expires { get; set; }
         public string? reset_token { get; set; }
@@ -43,6 +44,7 @@ namespace AssignaApi.Models
         public byte[] password_hash { get; set; } = null!;
         public byte[] password_salt { get; set; } = null!;
         public string verify_token { get; set; } = null!;
+        public DateTime expires_at { get; set; }
         public string refresh_token { get; set; } = null!;
         public DateTime refresh_expires { get; set; }
         public string? reset_token { get; set; }

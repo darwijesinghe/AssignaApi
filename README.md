@@ -266,7 +266,7 @@ https://assignaapi.azurewebsites.net/leadtasks/low-priority
   "tsk_category": 1,
   "deadline": "2022-12-18",
   "priority": "High",
-  "member": 1,
+  "member": 2,
   "tsk_note": "Test note for the test task"
 }
 
@@ -287,6 +287,7 @@ https://assignaapi.azurewebsites.net/leadtasks/low-priority
 // Request
 
 {
+  "tsk_id": 1,
   "tsk_title": "Test task edit",
   "tsk_category": 1,
   "deadline": "2022-12-19",

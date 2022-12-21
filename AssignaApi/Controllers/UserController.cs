@@ -1,13 +1,13 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using AssignaApi.Helpers;
 using AssignaApi.Interfaces;
 using AssignaApi.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AssignaApi.Controllers
 {
@@ -17,8 +17,10 @@ namespace AssignaApi.Controllers
     {
         // services
         private readonly IDataService _dataService;
+
         private readonly Helper _helper;
         private readonly JwtConfig _jwtConfig;
+
         public UserController(IDataService dataService, Helper helper,
         IOptions<JwtConfig> jwtConfig)
         {
@@ -31,13 +33,12 @@ namespace AssignaApi.Controllers
         [HttpPost("register")]
         public async Task<JsonResult> UserRegister([FromBody] UserRegister data)
         {
-
-            // validate incoming data
+            // validations
             if (!ModelState.IsValid)
             {
                 return new JsonResult(new
                 {
-                    message = "Required data not valid",
+                    message = "Required data is not found",
                     success = false
                 });
             }
@@ -57,7 +58,6 @@ namespace AssignaApi.Controllers
             var result = await _dataService.UserRegisterAsync(data);
             if (result.success)
             {
-
                 return new JsonResult(new
                 {
                     message = "Ok",
@@ -72,19 +72,18 @@ namespace AssignaApi.Controllers
                     success = false
                 });
             }
-
         }
 
         // user login
         [HttpPost("login")]
         public JsonResult UserLogin([FromBody] UserLogin data)
         {
-            // validate incoming data
+            // validations
             if (!ModelState.IsValid)
             {
                 return new JsonResult(new
                 {
-                    message = "Required data not valid",
+                    message = "Required data is not found",
                     success = false
                 });
             }
@@ -121,19 +120,18 @@ namespace AssignaApi.Controllers
                 token = user.verify_token,
                 refresh_token = user.refresh_token
             });
-
         }
 
         // forgot password
         [HttpPost("forgot-password")]
         public async Task<JsonResult> ForgotPassword([FromBody] ForgotPassword data)
         {
-            // validate incoming data
+            // validations
             if (!ModelState.IsValid)
             {
                 return new JsonResult(new
                 {
-                    message = "Required data not valid",
+                    message = "Required data is not found",
                     success = false
                 });
             }
@@ -171,19 +169,18 @@ namespace AssignaApi.Controllers
                     success = false
                 });
             }
-
         }
 
         // reset password
         [HttpPost("reset-password")]
         public async Task<JsonResult> ResetPassword([FromBody] ResetPassword data)
         {
-            // validate incoming data
+            // validations
             if (!ModelState.IsValid)
             {
                 return new JsonResult(new
                 {
-                    message = "Required data not valid",
+                    message = "Required data is not found",
                     success = false
                 });
             }
@@ -198,7 +195,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Token is not valid",
+                    message = "Reset token is expired",
                     success = false
                 });
             }
@@ -226,27 +223,38 @@ namespace AssignaApi.Controllers
         [HttpPost("refresh-token")]
         public async Task<JsonResult> RefreshToken([FromBody] RefreshToken data)
         {
-            // validate incoming data
+            // validations
             if (!ModelState.IsValid)
             {
                 return new JsonResult(new
                 {
-                    message = "Required data not valid",
+                    message = "Required data is not found",
                     success = false
                 });
             }
 
-            // check user and reset token is valid or not
+            // check user and refresh token is valid or not
             var user = _dataService.AllUsers().FirstOrDefault
             (
                 x => x.refresh_token == data.refresh_token
             );
 
-            if (user is null || user.refresh_expires < DateTime.Now.ToUniversalTime())
+
+            if (user is null || user.refresh_expires < DateTime.Now)
             {
                 return new JsonResult(new
                 {
-                    message = "Token is not valid",
+                    message = "Refresh token is expired",
+                    success = false
+                });
+            }
+
+            // check verify token is expired or not
+            if (user.expires_at > DateTime.Now)
+            {
+                return new JsonResult(new
+                {
+                    message = "Verify token is still not expired",
                     success = false
                 });
             }
@@ -270,7 +278,6 @@ namespace AssignaApi.Controllers
                     success = true
                 });
             }
-
         }
 
         // team members
@@ -287,6 +294,5 @@ namespace AssignaApi.Controllers
                 data = result
             });
         }
-
     }
 }
