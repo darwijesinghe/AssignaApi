@@ -176,7 +176,7 @@ namespace AssignaApi.Controllers
 
             }
 
-            var result = await _dataService.MarkasDone(data);
+            var result = await _dataService.MarkasDoneAsync(data);
             if (result.success)
             {
                 return new JsonResult(new

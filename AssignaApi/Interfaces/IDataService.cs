@@ -71,7 +71,7 @@ namespace AssignaApi.Interfaces
         Task<Result> AddTaskNoteAsync(TaskDto data);
 
         // mark as done
-        Task<Result> MarkasDone(MarkDone data);
+        Task<Result> MarkasDoneAsync(MarkDone data);
 
         #endregion
 

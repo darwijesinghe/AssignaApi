@@ -506,7 +506,7 @@ namespace AssignaApi.Services
         }
 
         // mark as task done
-        public async Task<Result> MarkasDone(MarkDone data)
+        public async Task<Result> MarkasDoneAsync(MarkDone data)
         {
             var task = _context.task.FirstOrDefault(x => x.tsk_id == data.tsk_id);
             if (task is not null)
