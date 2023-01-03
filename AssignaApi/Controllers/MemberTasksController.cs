@@ -89,6 +89,27 @@ namespace AssignaApi.Controllers
             });
         }
 
+        // task info
+        [HttpGet("task-info")]
+        public async Task<IActionResult> TaskInfo(int taskId)
+        {
+            var result = await _dataService.TaskInfo(taskId);
+            if (result.Count == 0)
+            {
+                return new JsonResult(new
+                {
+                    message = "Requested task is not found",
+                    success = false
+                });
+
+            }
+
+            return new JsonResult(new
+            {
+                data = result
+            });
+        }
+        
         // write a task note
         [HttpPost("write-note")]
         public async Task<JsonResult> WriteNote([FromBody] AddNote data)

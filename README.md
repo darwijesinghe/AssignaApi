@@ -437,6 +437,13 @@ https://assignaapi.azurewebsites.net/membertasks/low-priority
 }
 ```
 
+- ### Task info
+
+```
+// [GET]
+https://assignaapi.azurewebsites.net/membertasks/task-info?taskid=1
+```
+
 ## Support
 
 Darshana Wijesinghe  

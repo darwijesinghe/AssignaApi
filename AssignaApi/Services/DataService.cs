@@ -390,6 +390,8 @@ namespace AssignaApi.Services
             }
         }
 
+        #endregion
+
         // task info
         public async Task<List<TaskDto>> TaskInfo(int taskId)
         {
@@ -420,8 +422,6 @@ namespace AssignaApi.Services
             .Where(x => x.tsk_id == taskId)
             .OrderBy(x => x.tsk_id).ToList();
         }
-
-        #endregion
 
         // all tasks
         public async Task<List<TaskDto>> AllTasks()
