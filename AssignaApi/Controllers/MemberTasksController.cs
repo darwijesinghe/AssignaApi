@@ -98,7 +98,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Requested task is not found",
+                    message = "Requested task is not found.",
                     success = false
                 });
 
@@ -119,20 +119,20 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
 
             // check task is already completed or not
-            var complete = await _dataService.TaskInfo(data.tsk_id);
+            var complete = await _dataService.TaskInfo(data.TskId);
             if (complete.Count > 0)
             {
-                if (complete.First().complete)
+                if (complete.First().Complete)
                 {
                     return new JsonResult(new
                     {
-                        message = "Task is already completed",
+                        message = "Task is already completed.",
                         success = false
                     });
                 }
@@ -141,7 +141,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Task is not found to add a note",
+                    message = "Task is not found to add a note.",
                     success = false
                 });
             }
@@ -149,8 +149,8 @@ namespace AssignaApi.Controllers
             // send data to add task note
             var task = new TaskDto()
             {
-                tsk_id = data.tsk_id,
-                user_note = data.user_note
+                TskId = data.TskId,
+                UserNote = data.UserNote
             };
 
             var result = await _dataService.AddTaskNoteAsync(task);
@@ -166,7 +166,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }
@@ -181,17 +181,17 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
 
-            var task = await _dataService.TaskInfo(data.tsk_id);
+            var task = await _dataService.TaskInfo(data.TskId);
             if (task.Count == 0)
             {
                 return new JsonResult(new
                 {
-                    message = "Task is not found to mark as done",
+                    message = "Task is not found to mark as done.",
                     success = false
                 });
 
@@ -210,7 +210,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }

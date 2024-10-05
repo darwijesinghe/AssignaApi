@@ -15,7 +15,7 @@ namespace AssignaApi.Helpers
     public class JwtHelpers
     {
         // services
-        private IHttpContextAccessor _httpContext;
+        private readonly IHttpContextAccessor _httpContext;
         private readonly JwtConfig _jwtConfig;
         public JwtHelpers(IHttpContextAccessor httpContext, IOptions<JwtConfig> jwtConfig)
         {
@@ -73,11 +73,19 @@ namespace AssignaApi.Helpers
             return token;
         }
 
+        // make token, refresh token and expire time
+        public (string token, string refreshToken, int expireAt) MakeTokens(MakeToken data)
+        {
+            var token = GenerateJwtToken(data.Name, data.Mail, data.Role);
+            var refreshToken = GenerateRandomToken(data.Length);
+            var expireAt = TimeSpan.Parse(_jwtConfig.Expire).Minutes;
+
+            return (token, refreshToken, expireAt);
+        }
+
         // read JWT token
         public AuthResult ReadJwtToken()
         {
-            var claims = new string[2];
-
             // access token
             string authHeader = _httpContext.HttpContext.Request.Headers["Authorization"];
             authHeader = authHeader.Replace("Bearer ", "");
@@ -90,7 +98,7 @@ namespace AssignaApi.Helpers
 
             return new AuthResult
             {
-                uesr_name = userName,
+                user_name = userName,
                 role = userRole
             };
         }
@@ -99,12 +107,21 @@ namespace AssignaApi.Helpers
     public class JwtConfig
     {
         // JWT options
-        public string Secret { get; set; } = string.Empty;
-        public string Audience { get; set; } = string.Empty;
-        public string Issuer { get; set; } = string.Empty;
-        public string Expire { get; set; } = string.Empty;
+        public string Secret { get; set; }
+        public string Audience { get; set; }
+        public string Issuer { get; set; }
+        public string Expire { get; set; }
 
     }
+
+    public class MakeToken
+    {
+        public string Name { get; set; }
+        public string Mail { get; set; }
+        public string Role { get; set; }
+        public int Length { get; set; }
+    }
+
     public class JwtConfigSetup : IConfigureOptions<JwtConfig>
     {
         // services

@@ -4,14 +4,16 @@ using AssignaApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignaApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231103144320_AddedExternalLoginUserTable")]
+    partial class AddedExternalLoginUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,6 +43,76 @@ namespace AssignaApi.Migrations
                     b.ToTable("category");
                 });
 
+            modelBuilder.Entity("AssignaApi.Models.ExternalUsers", b =>
+                {
+                    b.Property<int>("user_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("email_verified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("expires_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("family_name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("given_name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTime>("insertdate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<bool>("is_admin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("locale")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("picture")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("refresh_expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("refresh_token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("reset_expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("reset_token")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("verify_token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("user_id");
+
+                    b.ToTable("external_users");
+                });
+
             modelBuilder.Entity("AssignaApi.Models.Priority", b =>
                 {
                     b.Property<int>("pri_id")
@@ -68,6 +140,9 @@ namespace AssignaApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExternalUsersuser_id")
+                        .HasColumnType("int");
 
                     b.Property<int>("cat_id")
                         .HasColumnType("int");
@@ -115,6 +190,8 @@ namespace AssignaApi.Migrations
 
                     b.HasKey("tsk_id");
 
+                    b.HasIndex("ExternalUsersuser_id");
+
                     b.HasIndex("cat_id");
 
                     b.HasIndex("user_id");
@@ -129,22 +206,11 @@ namespace AssignaApi.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("email_verified")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime>("expires_at")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("family_name")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
                     b.Property<string>("first_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("given_name")
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -156,17 +222,13 @@ namespace AssignaApi.Migrations
                     b.Property<bool>("is_admin")
                         .HasColumnType("bit");
 
-                    b.Property<string>("locale")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<byte[]>("password_hash")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("password_salt")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("picture")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("refresh_expires")
                         .HasColumnType("datetime2");
@@ -202,6 +264,10 @@ namespace AssignaApi.Migrations
 
             modelBuilder.Entity("AssignaApi.Models.Task", b =>
                 {
+                    b.HasOne("AssignaApi.Models.ExternalUsers", null)
+                        .WithMany("task")
+                        .HasForeignKey("ExternalUsersuser_id");
+
                     b.HasOne("AssignaApi.Models.Category", "category")
                         .WithMany("task")
                         .HasForeignKey("cat_id")

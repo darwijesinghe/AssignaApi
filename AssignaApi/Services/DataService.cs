@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using AssignaApi.Data;
 using AssignaApi.Helpers;
@@ -9,6 +11,7 @@ using AssignaApi.Models;
 using AssignaApi.Response;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Task = AssignaApi.Models.Task;
 
 namespace AssignaApi.Services
@@ -19,14 +22,14 @@ namespace AssignaApi.Services
         private const string empty = "";
 
         // services
-        private DataContext _context { get; }
+        private DataContext Context { get; }
         private readonly Helper _helper;
         private readonly JwtHelpers _jwtHelpers;
         private readonly JwtConfig _jwtConfig;
         public DataService(DataContext context, Helper helper,
         JwtHelpers jwtHelpers, IOptions<JwtConfig> jwtConfig)
         {
-            _context = context;
+            Context = context;
             _helper = helper;
             _jwtHelpers = jwtHelpers;
             _jwtConfig = jwtConfig.Value;
@@ -37,7 +40,7 @@ namespace AssignaApi.Services
         {
             // password hash
             _helper.PasswordHash(
-                data.password,
+                data.Password,
                 out byte[] passwordHash,
                 out byte[] passwordSalt
             );
@@ -45,9 +48,9 @@ namespace AssignaApi.Services
             // generate the token
             string jwtToken = _jwtHelpers.GenerateJwtToken
             (
-                name: data.user_name,
-                mail: data.email,
-                role: data.role
+                name: data.UserName,
+                mail: data.Email,
+                role: data.Role
             );
 
             // refresh token
@@ -58,23 +61,23 @@ namespace AssignaApi.Services
 
             var user = new Users()
             {
-                user_name = data.user_name ?? empty,
-                first_name = data.first_name ?? empty,
-                user_mail = data.email ?? empty,
+                user_name = data.UserName ?? empty,
+                first_name = data.FirstName ?? empty,
+                user_mail = data.Email ?? empty,
                 password_hash = passwordHash,
                 password_salt = passwordSalt,
-                is_admin = (data.role == Roles.lead) ? true : false,
+                is_admin = (data.Role == Roles.lead),
                 verify_token = jwtToken,
                 expires_at = DateTime.Now.AddMinutes(minutes),
                 refresh_token = refToken,
                 refresh_expires = DateTime.Now.AddMonths(1)
             };
 
-            _context.users.Add(user);
+            Context.users.Add(user);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
 
                 return new AuthResult
                 {
@@ -95,24 +98,29 @@ namespace AssignaApi.Services
         // application users
         public List<UsersDto> AllUsers()
         {
-            var users = _context.users
+            var users = Context.users
             .Select(x => new UsersDto
             {
-                user_id = x.user_id,
-                user_name = x.user_name,
-                first_name = x.first_name,
-                user_mail = x.user_mail,
-                password_hash = x.password_hash,
-                password_salt = x.password_salt,
-                verify_token = x.verify_token,
-                expires_at = x.expires_at,
-                refresh_token = x.refresh_token,
-                refresh_expires = x.refresh_expires,
-                reset_token = x.reset_token,
-                reset_expires = x.reset_expires,
-                is_admin = x.is_admin
+                UserId = x.user_id,
+                UserName = x.user_name,
+                FirstName = x.first_name,
+                UserMail = x.user_mail,
+                PasswordHash = x.password_hash ?? new byte[32],
+                PasswordSalt = x.password_salt ?? new byte[32],
+                GivenName = x.given_name ?? empty,
+                FamilyName = x.family_name ?? empty,
+                EmailVerified = x.email_verified,
+                Locale = x.locale ?? empty,
+                Picture = x.picture ?? empty,
+                VerifyToken = x.verify_token,
+                ExpiresAt = x.expires_at,
+                RefreshToken = x.refresh_token,
+                RefreshExpires = x.refresh_expires,
+                ResetToken = x.reset_token,
+                ResetExpires = x.reset_expires,
+                IsAdmin = x.is_admin
             })
-            .OrderBy(x => x.user_id)
+            .OrderBy(x => x.UserId)
             .ToList();
 
             return users;
@@ -122,9 +130,9 @@ namespace AssignaApi.Services
         public async Task<AuthResult> ForgotTokenAsync(ForgotPassword data)
         {
             // user retrieve
-            var user = _context.users.FirstOrDefault
+            var user = Context.users.FirstOrDefault
             (
-                x => x.user_mail == data.email
+                x => x.user_mail == data.Email
             );
 
             user.reset_token = _jwtHelpers.GenerateRandomToken(100);
@@ -132,7 +140,7 @@ namespace AssignaApi.Services
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return new AuthResult
                 {
                     message = "Ok",
@@ -154,14 +162,14 @@ namespace AssignaApi.Services
         public async Task<Result> ResetPasswordAsync(ResetPassword data)
         {
             // user retrieve
-            var user = _context.users.FirstOrDefault
+            var user = Context.users.FirstOrDefault
             (
-                x => x.reset_token == data.reset_token
+                x => x.reset_token == data.ResetToken
             );
 
             // password hash
             _helper.PasswordHash(
-                data.password,
+                data.Password,
                 out byte[] passwordHash,
                 out byte[] passwordSalt
             );
@@ -173,7 +181,7 @@ namespace AssignaApi.Services
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
 
                 return new Result
                 {
@@ -195,9 +203,9 @@ namespace AssignaApi.Services
         public async Task<AuthResult> ResetVerifyTokenAsync(RefreshToken data)
         {
             // user retrieve
-            var user = _context.users.FirstOrDefault
+            var user = Context.users.FirstOrDefault
             (
-                x => x.refresh_token == data.refresh_token
+                x => x.refresh_token == data.TokenRefresh
             );
 
             // generate the token
@@ -221,7 +229,7 @@ namespace AssignaApi.Services
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
 
                 return new AuthResult
                 {
@@ -246,13 +254,13 @@ namespace AssignaApi.Services
         // get all task categories
         public List<CategoryDto> AllCategories()
         {
-            var categories = _context.category
+            var categories = Context.category
             .Select(x => new CategoryDto
             {
-                cat_id = x.cat_id,
-                cat_name = x.cat_name
+                CatId = x.cat_id,
+                CatName = x.cat_name
             })
-            .OrderBy(x => x.cat_id)
+            .OrderBy(x => x.CatId)
             .ToList();
 
             return categories;
@@ -261,17 +269,17 @@ namespace AssignaApi.Services
         // get team members
         public List<UsersDto> TeamMembers()
         {
-            var members = _context.users
+            var members = Context.users
             .Select(x => new UsersDto
             {
-                user_id = x.user_id,
-                user_name = x.user_name,
-                first_name = x.first_name,
-                user_mail = x.user_mail,
-                is_admin = x.is_admin
+                UserId = x.user_id,
+                UserName = x.user_name,
+                FirstName = x.first_name,
+                UserMail = x.user_mail,
+                IsAdmin = x.is_admin
             })
-            .Where(x => x.is_admin == false)
-            .OrderBy(x => x.user_id)
+            .Where(x => x.IsAdmin == false)
+            .OrderBy(x => x.UserId)
             .ToList();
 
             return members;
@@ -280,13 +288,13 @@ namespace AssignaApi.Services
         // get priorities
         public List<PriorityDto> Priorities()
         {
-            var priorities = _context.priority
+            var priorities = Context.priority
             .Select(x => new PriorityDto
             {
-                pri_id = x.pri_id,
-                pri_name = x.pri_name
+                PriId = x.pri_id,
+                PriName = x.pri_name
             })
-            .OrderBy(x => x.pri_id)
+            .OrderBy(x => x.PriId)
             .ToList();
 
             return priorities;
@@ -297,22 +305,22 @@ namespace AssignaApi.Services
         {
             var task = new Task()
             {
-                tsk_title = data.tsk_title,
-                deadline = data.deadline,
-                tsk_note = data.tsk_note,
-                pri_high = data.pri_high,
-                pri_medium = data.pri_medium,
-                pri_low = data.pri_low,
-                cat_id = data.cat_id,
-                user_id = data.user_id,
-                pending = data.pending
+                tsk_title = data.TskTitle,
+                deadline = data.Deadline,
+                tsk_note = data.TskNote,
+                pri_high = data.PriHigh,
+                pri_medium = data.PriMedium,
+                pri_low = data.PriLow,
+                cat_id = data.CatId,
+                user_id = data.UserId,
+                pending = data.Pending
             };
 
-            _context.task.Add(task);
+            Context.task.Add(task);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return new Result
                 {
                     message = "Ok",
@@ -332,23 +340,23 @@ namespace AssignaApi.Services
         // edit task
         public async Task<Result> EditTaskAsync(TaskDto data)
         {
-            var task = _context.task.FirstOrDefault(x => x.tsk_id == data.tsk_id);
+            var task = Context.task.FirstOrDefault(x => x.tsk_id == data.TskId);
 
             if (task is not null)
             {
-                task.tsk_title = data.tsk_title;
-                task.cat_id = data.cat_id;
-                task.deadline = data.deadline;
-                task.pri_high = data.pri_high;
-                task.pri_medium = data.pri_medium;
-                task.pri_low = data.pri_low;
-                task.user_id = data.user_id;
-                task.tsk_note = data.tsk_note;
+                task.tsk_title = data.TskTitle;
+                task.cat_id = data.CatId;
+                task.deadline = data.Deadline;
+                task.pri_high = data.PriHigh;
+                task.pri_medium = data.PriMedium;
+                task.pri_low = data.PriLow;
+                task.user_id = data.UserId;
+                task.tsk_note = data.TskNote;
             }
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return new Result
                 {
                     message = "Ok",
@@ -368,12 +376,12 @@ namespace AssignaApi.Services
         // delete a task
         public async Task<Result> DeleteTaskAsync(DeleteTask data)
         {
-            var task = _context.task.FirstOrDefault(x => x.tsk_id == data.tsk_id);
-            _context.task.Remove(task);
+            var task = Context.task.FirstOrDefault(x => x.tsk_id == data.TskId);
+            Context.task.Remove(task);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return new Result
                 {
                     message = "Ok",
@@ -395,47 +403,47 @@ namespace AssignaApi.Services
         // task info
         public async Task<List<TaskDto>> TaskInfo(int taskId)
         {
-            var taks = await (from us in _context.users
-                              join tk in _context.task on us.user_id equals tk.users.user_id
-                              join ct in _context.category on tk.category.cat_id equals ct.cat_id
+            var taks = await (from us in Context.users
+                              join tk in Context.task on us.user_id equals tk.users.user_id
+                              join ct in Context.category on tk.category.cat_id equals ct.cat_id
                               select new TaskDto
                               {
-                                  tsk_id = tk.tsk_id,
-                                  tsk_title = tk.tsk_title,
-                                  deadline = tk.deadline,
-                                  tsk_note = tk.tsk_note,
-                                  pending = tk.pending,
-                                  complete = tk.complete,
-                                  pri_high = tk.pri_high,
-                                  pri_medium = tk.pri_medium,
-                                  pri_low = tk.pri_low,
-                                  user_note = tk.user_note,
-                                  cat_id = tk.cat_id,
-                                  user_id = tk.user_id,
-                                  first_name = us.first_name,
-                                  user_mail = us.user_mail,
-                                  cat_name = ct.cat_name
+                                  TskId = tk.tsk_id,
+                                  TskTitle = tk.tsk_title,
+                                  Deadline = tk.deadline,
+                                  TskNote = tk.tsk_note,
+                                  Pending = tk.pending,
+                                  Complete = tk.complete,
+                                  PriHigh = tk.pri_high,
+                                  PriMedium = tk.pri_medium,
+                                  PriLow = tk.pri_low,
+                                  UserNote = tk.user_note,
+                                  CatId = tk.cat_id,
+                                  UserId = tk.user_id,
+                                  FirstName = us.first_name,
+                                  UserMail = us.user_mail,
+                                  CatName = ct.cat_name
 
                               }).ToListAsync();
 
             return taks
-            .Where(x => x.tsk_id == taskId)
-            .OrderBy(x => x.tsk_id).ToList();
+            .Where(x => x.TskId == taskId)
+            .OrderBy(x => x.TskId).ToList();
         }
 
         // all tasks
         public async Task<List<TaskDto>> AllTasks()
         {
             var taks = await this.TaskData();
-            return taks.OrderBy(x => x.tsk_id).ToList();
+            return taks.OrderBy(x => x.TskId).ToList();
         }
 
         // pending tasks
         public async Task<List<TaskDto>> Pendings()
         {
             var taks = await this.TaskData();
-            return taks.Where(x => x.pending == true)
-            .OrderBy(x => x.tsk_id)
+            return taks.Where(x => x.Pending == true)
+            .OrderBy(x => x.TskId)
             .ToList();
         }
 
@@ -443,8 +451,8 @@ namespace AssignaApi.Services
         public async Task<List<TaskDto>> Completed()
         {
             var taks = await this.TaskData();
-            return taks.Where(x => x.complete == true)
-            .OrderBy(x => x.tsk_id)
+            return taks.Where(x => x.Complete == true)
+            .OrderBy(x => x.TskId)
             .ToList();
         }
 
@@ -452,8 +460,8 @@ namespace AssignaApi.Services
         public async Task<List<TaskDto>> HighPriority()
         {
             var taks = await this.TaskData();
-            return taks.Where(x => x.pri_high == true)
-            .OrderBy(x => x.tsk_id)
+            return taks.Where(x => x.PriHigh == true)
+            .OrderBy(x => x.TskId)
             .ToList();
         }
 
@@ -461,8 +469,8 @@ namespace AssignaApi.Services
         public async Task<List<TaskDto>> MediumPriority()
         {
             var taks = await this.TaskData();
-            return taks.Where(x => x.pri_medium == true)
-            .OrderBy(x => x.tsk_id)
+            return taks.Where(x => x.PriMedium == true)
+            .OrderBy(x => x.TskId)
             .ToList();
         }
 
@@ -470,8 +478,8 @@ namespace AssignaApi.Services
         public async Task<List<TaskDto>> LowPriority()
         {
             var taks = await this.TaskData();
-            return taks.Where(x => x.pri_low == true)
-            .OrderBy(x => x.tsk_id)
+            return taks.Where(x => x.PriLow == true)
+            .OrderBy(x => x.TskId)
             .ToList();
         }
 
@@ -480,15 +488,15 @@ namespace AssignaApi.Services
         // add task note
         public async Task<Result> AddTaskNoteAsync(TaskDto data)
         {
-            var task = _context.task.FirstOrDefault(x => x.tsk_id == data.tsk_id);
+            var task = Context.task.FirstOrDefault(x => x.tsk_id == data.TskId);
             if (task is not null)
             {
-                task.user_note = data.user_note;
+                task.user_note = data.UserNote;
             }
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return new Result
                 {
                     message = "Ok",
@@ -508,7 +516,7 @@ namespace AssignaApi.Services
         // mark as task done
         public async Task<Result> MarkasDoneAsync(MarkDone data)
         {
-            var task = _context.task.FirstOrDefault(x => x.tsk_id == data.tsk_id);
+            var task = Context.task.FirstOrDefault(x => x.tsk_id == data.TskId);
             if (task is not null)
             {
                 task.pending = false;
@@ -517,7 +525,7 @@ namespace AssignaApi.Services
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return new Result
                 {
                     message = "Ok",
@@ -539,24 +547,24 @@ namespace AssignaApi.Services
         // single method use to return task info
         private async Task<List<TaskDto>> TaskData()
         {
-            var taks = await (from us in _context.users
-                              join tk in _context.task on us.user_id equals tk.users.user_id
+            var taks = await (from us in Context.users
+                              join tk in Context.task on us.user_id equals tk.users.user_id
                               select new TaskDto
                               {
-                                  tsk_id = tk.tsk_id,
-                                  tsk_title = tk.tsk_title,
-                                  deadline = tk.deadline,
-                                  tsk_note = tk.tsk_note,
-                                  pending = tk.pending,
-                                  complete = tk.complete,
-                                  pri_high = tk.pri_high,
-                                  pri_medium = tk.pri_medium,
-                                  pri_low = tk.pri_low,
-                                  user_note = tk.user_note,
-                                  cat_id = tk.cat_id,
-                                  user_id = tk.user_id,
-                                  user_name = us.user_name,
-                                  first_name = us.first_name
+                                  TskId = tk.tsk_id,
+                                  TskTitle = tk.tsk_title,
+                                  Deadline = tk.deadline,
+                                  TskNote = tk.tsk_note,
+                                  Pending = tk.pending,
+                                  Complete = tk.complete,
+                                  PriHigh = tk.pri_high,
+                                  PriMedium = tk.pri_medium,
+                                  PriLow = tk.pri_low,
+                                  UserNote = tk.user_note,
+                                  CatId = tk.cat_id,
+                                  UserId = tk.user_id,
+                                  UserName = us.user_name,
+                                  FirstName = us.first_name
 
                               }).ToListAsync();
 
@@ -568,13 +576,147 @@ namespace AssignaApi.Services
                 // filter by member name
                 var filterdTasks = taks.Where
                 (
-                    x => x.user_name == claims.uesr_name
+                    x => x.UserName == claims.user_name
                 );
 
                 return filterdTasks.ToList();
             }
 
             return taks;
+        }
+
+        // get google user infomation
+        public async Task<GoogleResponse> GoogleUserInfomation(string accessToken)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    // access token
+                    var header = new AuthenticationHeaderValue("Bearer", accessToken);
+                    client.DefaultRequestHeaders.Authorization = header;
+
+                    // get the response
+                    var response = new HttpResponseMessage();
+                    response = await client.GetAsync("https://www.googleapis.com/oauth2/v3/userinfo");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // read the response
+                        var data = await response.Content.ReadAsStringAsync();
+
+                        // deserializing
+                        var info = JsonConvert.DeserializeObject<GoogleResponse>(data);
+
+                        return new GoogleResponse
+                        {
+                            sub = info.sub,
+                            name = info.name,
+                            given_name = info.given_name,
+                            family_name = info.family_name,
+                            picture = info.picture,
+                            email = info.email,
+                            email_verified = info.email_verified,
+                            locale = info.locale
+                        };
+                    }
+
+                    return new GoogleResponse() { error = response.ReasonPhrase };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new GoogleResponse() { error = ex.Message };
+            }
+        }
+
+        // external signin
+        public AuthResult ExternalSignIn(string email)
+        {
+            try
+            {
+                // get user from email
+                var user = AllUsers().FirstOrDefault
+                (
+                    x => x.UserMail == email
+                );
+
+                if (user is not null)
+                {
+                    return new AuthResult
+                    {
+                        message = "Ok",
+                        success = true,
+                        token = user.VerifyToken,
+                        refresh_token = user.RefreshToken
+                    };
+                }
+
+                return new AuthResult
+                {
+                    message = "User is not found.",
+                    success = false
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResult
+                {
+                    message = ex.Message,
+                    success = false
+                };
+            }
+        }
+
+        // external signup
+        public async Task<AuthResult> ExternalSignUp(ExternalSignUp data)
+        {
+            // make token
+            var (token, refreshToken, expireAt) = _jwtHelpers.MakeTokens(new MakeToken
+            {
+                Name = data.GivenName,
+                Mail = data.Email,
+                Role = data.Role,
+                Length = 100
+            });
+
+            // user info
+            var user = new Users()
+            {
+                user_name = data.GivenName,
+                first_name = data.GivenName,
+                user_mail = data.Email,
+                is_admin = (data.Role == Roles.lead),
+                given_name = data.GivenName,
+                family_name = data.FamilyName,
+                email_verified = data.EmailVerified,
+                locale = data.Locale,
+                picture = data.Picture,
+                verify_token = token,
+                expires_at = DateTime.Now.AddMinutes(expireAt),
+                refresh_token = refreshToken,
+                refresh_expires = DateTime.Now.AddMonths(1)
+            };
+
+            Context.users.Add(user);
+
+            try
+            {
+                await Context.SaveChangesAsync();
+
+                return new AuthResult
+                {
+                    message = "Ok",
+                    success = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResult
+                {
+                    message = ex.Message,
+                    success = false
+                };
+            }
         }
 
     }

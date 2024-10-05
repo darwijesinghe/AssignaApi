@@ -20,6 +20,7 @@ namespace AssignaApi
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private const string cors = "AllowOrigin";
 
         public Startup(IConfiguration configuration)
         {
@@ -29,6 +30,18 @@ namespace AssignaApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: cors,
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
+            });
+
             services.AddControllers();
 
             services.AddHttpContextAccessor();
@@ -48,9 +61,9 @@ namespace AssignaApi
                 // get database option values
                 var options = serviceprovider.GetService<IOptions<DatabaseOptions>>()!.Value;
 
-                option.UseSqlServer(options.connectionString, action =>
+                option.UseSqlServer(options.ConnectionString, action =>
                 {
-                    action.CommandTimeout(options.commandTimeout);
+                    action.CommandTimeout(options.CommandTimeout);
                 });
             });
 
@@ -103,7 +116,7 @@ namespace AssignaApi
             // JWT helper
             services.AddScoped<JwtHelpers>();
 
-            #endregion dependency services
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -124,12 +137,14 @@ namespace AssignaApi
             app.UseSwaggerUI(swg =>
             {
                 swg.SwaggerEndpoint("/swagger/v1/swagger.json", "AssignaApi v1");
-                swg.RoutePrefix = string.Empty;
+                swg.RoutePrefix = "swagger";
             });
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseCors(cors);
+
+            app.UseHttpsRedirection();
 
             // aunthentication
             app.UseAuthentication();

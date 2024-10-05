@@ -9,10 +9,15 @@ namespace AssignaApi.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         // tables
-        public DbSet<Category> category { get; set; } = null!;
-        public DbSet<Users> users { get; set; } = null!;
-        public DbSet<Task> task { get; set; } = null!;
-        public DbSet<Priority> priority { get; set; } = null!;
+#pragma warning disable IDE1006 // Naming Styles
+
+        public DbSet<Category> category { get; set; }
+
+        public DbSet<Users> users { get; set; }
+        public DbSet<Task> task { get; set; }
+        public DbSet<Priority> priority { get; set; }
+
+#pragma warning restore IDE1006 // Naming Styles
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,29 +37,29 @@ namespace AssignaApi.Data
             #region init data seed
 
             // category
-            var cats = new List<Category>()
-            {
-               new(){cat_id = 1, cat_name = "Team Task"},
-               new(){cat_id = 2, cat_name = "Individual Task"},
-               new(){cat_id = 3, cat_name = "Home Task"},
-               new(){cat_id = 4, cat_name = "Finance Task"},
-               new(){cat_id = 5, cat_name = "Client Task"},
-               new(){cat_id = 6, cat_name = "Reasearch Task"},
-            };
+            //var cats = new List<Category>()
+            //{
+            //   new(){cat_id = 1, cat_name = "Team Task"},
+            //   new(){cat_id = 2, cat_name = "Individual Task"},
+            //   new(){cat_id = 3, cat_name = "Home Task"},
+            //   new(){cat_id = 4, cat_name = "Finance Task"},
+            //   new(){cat_id = 5, cat_name = "Client Task"},
+            //   new(){cat_id = 6, cat_name = "Reasearch Task"},
+            //};
 
-            modelBuilder.Entity<Category>().HasData(cats);
+            //modelBuilder.Entity<Category>().HasData(cats);
 
-            // priority
-            var pri = new List<Priority>()
-            {
-               new(){pri_id = 1, pri_name = "High"},
-               new(){pri_id = 2, pri_name = "Medium"},
-               new(){pri_id = 3, pri_name = "Low"},
-            };
+            //// priority
+            //var pri = new List<Priority>()
+            //{
+            //   new(){pri_id = 1, pri_name = "High"},
+            //   new(){pri_id = 2, pri_name = "Medium"},
+            //   new(){pri_id = 3, pri_name = "Low"},
+            //};
 
-            modelBuilder.Entity<Priority>().HasData(pri);
+            //modelBuilder.Entity<Priority>().HasData(pri);
 
-            #endregion init data seed
+            #endregion
 
             base.OnModelCreating(modelBuilder);
         }

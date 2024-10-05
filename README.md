@@ -2,9 +2,9 @@
 
 ## Project Purpose
 
-This simple task management API application was made to showcase my coding ability to those who would like to hire me as a .NET developer.
+This simple task management API was created to showcase my coding skills to potential employers interested in hiring me as a .NET developer.
 
-This app was mainly developed to demonstrate basic CRUD operations using .NET Core REST API. This full app was designed and developed by myself. AssignaApi can use it as a back-end project to develop another small task management application.
+The application primarily demonstrates basic CRUD operations using a .NET Core REST API. I designed and developed the entire project myself. AssignaApi can be used as the back-end for developing a small task management application, serving as a foundation for further expansion.
 
 ## Contributors
 
@@ -58,11 +58,7 @@ This app was mainly developed to demonstrate basic CRUD operations using .NET Co
 
 ## Usage
 
-### Base URL of the application
-
-- `https://assignaapi.azurewebsites.net/`
-
-## Login / Register / Reset Password / Refresh Token
+### Login / Register / Reset Password / Refresh Token
 
 - ### User registration
 
@@ -74,22 +70,22 @@ This app was mainly developed to demonstrate basic CRUD operations using .NET Co
 // Request
 
 {
-  "user_name": "manudi@test",
-  "first_name": "manudi",
-  "email": "manudi@example.com",
-  "password": "manudi@123",
-  "role": "team-lead"
+  "FirstName": "Harshi",
+  "UserName": "harshi@lead",
+  "Email": "Any email address",
+  "Password": "team@lead123",
+  "Role": "team-lead"
 }
 
 // Team member account
 // Request
 
 {
-  "user_name": "manudi@test",
-  "first_name": "manudi",
-  "email": "manudi@example.com",
-  "password": "manudi@123",
-  "role": "team-member"
+  "FirstName": "Nadeesha",
+  "UserName": "nadeesha@work",
+  "Email": "Any email address",
+  "Password": "team@member123",
+  "Role": "team-member"
 }
 
 // Response
@@ -109,8 +105,8 @@ This app was mainly developed to demonstrate basic CRUD operations using .NET Co
 // Request
 
 {
-  "user_name": "manudi@test",
-  "password": "manudi@123"
+  "UserName": "harshi@lead",
+  "Password": "team@lead123"
 }
 
 // Response
@@ -132,7 +128,7 @@ This app was mainly developed to demonstrate basic CRUD operations using .NET Co
 // Request
 
 {
-  "email": "manudi@example.com"
+  "Email": "harshi@example.com"
 }
 
 // Response
@@ -153,9 +149,9 @@ This app was mainly developed to demonstrate basic CRUD operations using .NET Co
 // Request
 
 {
-  "password": "manudi@123",
-  "con_password": "manudi@123",
-  "reset_token": "4vZkirs9ZxD7kx5IgjQ9HcG4aze6RoEv..."
+  "Password": "harshi@123Pw",
+  "ConPassword": "harshi@123Pw",
+  "ResetToken": "4vZkirs9ZxD7kx5IgjQ9HcG4aze6RoEv..."
 }
 
 // Response
@@ -175,7 +171,7 @@ This app was mainly developed to demonstrate basic CRUD operations using .NET Co
 // Request
 
 {
-  "refresh_token": "4vZkirs9ZxD7kx5IgjQ9HcG4aze6RoEv..."
+  "RefreshToken": "4vZkirs9ZxD7kx5IgjQ9HcG4aze6RoEv..."
 }
 
 // Response
@@ -194,63 +190,63 @@ This app was mainly developed to demonstrate basic CRUD operations using .NET Co
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/category/categories
+https://[base-url]/category/categories
 ```
 
 - ### Task priorities
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/priority/priorities
+https://[base-url]/priority/priorities
 ```
 
 - ### Team members
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/user/members
+https://[base-url]/user/members
 ```
 
 - ### All tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/leadtasks/tasks
+https://[base-url]/leadtasks/tasks
 ```
 
 - ### Pending tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/leadtasks/pendings
+https://[base-url]/leadtasks/pendings
 ```
 
 - ### Completed tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/leadtasks/completes
+https://[base-url]/leadtasks/completes
 ```
 
 - ### High priority tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/leadtasks/high-priority
+https://[base-url]/leadtasks/high-priority
 ```
 
 - ### Medium priority tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/leadtasks/medium-priority
+https://[base-url]/leadtasks/medium-priority
 ```
 
 - ### Low priority tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/leadtasks/low-priority
+https://[base-url]/leadtasks/low-priority
 ```
 
 - ### Add a new task
@@ -262,12 +258,12 @@ https://assignaapi.azurewebsites.net/leadtasks/low-priority
 // Request
 
 {
-  "tsk_title": "Test task",
-  "tsk_category": 1,
-  "deadline": "2022-12-18",
-  "priority": "High",
-  "member": 2,
-  "tsk_note": "Test note for the test task"
+  "TskTitle": "Test task",
+  "TskCategory": 1,
+  "Deadline": "2022-12-18",
+  "Priority": "High",
+  "Member": 2,
+  "TskNote": "Test note for the test task."
 }
 
 // Response
@@ -287,13 +283,13 @@ https://assignaapi.azurewebsites.net/leadtasks/low-priority
 // Request
 
 {
-  "tsk_id": 1,
-  "tsk_title": "Test task edit",
-  "tsk_category": 1,
-  "deadline": "2022-12-19",
-  "priority": "Low",
-  "member": 2,
-  "tsk_note": "Edit test note for the test task"
+  "TskId": 1,
+  "TskTitle": "Test task edit",
+  "TskCategory": 1,
+  "Deadline": "2022-12-19",
+  "Priority": "Low",
+  "Member": 2,
+  "TskNote": "Edit test note for the test task."
 }
 
 // Response
@@ -313,7 +309,7 @@ https://assignaapi.azurewebsites.net/leadtasks/low-priority
 // Request
 
 {
-  "tsk_id": 1
+  "TskId": 1
 }
 
 // Response
@@ -333,8 +329,8 @@ https://assignaapi.azurewebsites.net/leadtasks/low-priority
 // Request
 
 {
-  "tsk_id": 1,
-  "message": "Please do this task as soon as possible"
+  "TskId": 1,
+  "Message": "Please do this task as soon as possible."
 }
 
 // Response
@@ -349,7 +345,7 @@ https://assignaapi.azurewebsites.net/leadtasks/low-priority
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/leadtasks/task-info?taskid=1
+https://[base-url]/leadtasks/task-info?taskid=1
 ```
 
 ## Team Member
@@ -358,42 +354,42 @@ https://assignaapi.azurewebsites.net/leadtasks/task-info?taskid=1
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/membertasks/tasks
+https://[base-url]/membertasks/tasks
 ```
 
 - ### Pending tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/membertasks/pendings
+https://[base-url]/membertasks/pendings
 ```
 
 - ### Completed tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/membertasks/completes
+https://[base-url]/membertasks/completes
 ```
 
 - ### High priority tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/membertasks/high-priority
+https://[base-url]/membertasks/high-priority
 ```
 
 - ### Medium priority tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/membertasks/medium-priority
+https://[base-url]/membertasks/medium-priority
 ```
 
 - ### Low priority tasks
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/membertasks/low-priority
+https://[base-url]/membertasks/low-priority
 ```
 
 - ### Add a note for task
@@ -405,8 +401,8 @@ https://assignaapi.azurewebsites.net/membertasks/low-priority
 // Request
 
 {
-  "tsk_id": 1,
-  "user_note": "This will be take two more days"
+  "TskId": 1,
+  "UserNote": "This will take two more days."
 }
 
 // Response
@@ -426,7 +422,7 @@ https://assignaapi.azurewebsites.net/membertasks/low-priority
 // Request
 
 {
-  "tsk_id": 1
+  "TskId": 1
 }
 
 // Response
@@ -441,7 +437,7 @@ https://assignaapi.azurewebsites.net/membertasks/low-priority
 
 ```
 // [GET]
-https://assignaapi.azurewebsites.net/membertasks/task-info?taskid=1
+https://[base-url]/membertasks/task-info?taskid=1
 ```
 
 ## Support

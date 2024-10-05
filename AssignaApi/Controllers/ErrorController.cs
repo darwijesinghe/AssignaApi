@@ -21,7 +21,6 @@ namespace AssignaApi.Controllers
         {
             // error information
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            var stackTrace = context.Error.StackTrace;
             var errorMessage = context.Error.Message;
 
             // log the error

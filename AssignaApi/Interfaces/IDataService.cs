@@ -75,5 +75,14 @@ namespace AssignaApi.Interfaces
 
         #endregion
 
+        // get google user infomation
+        Task<GoogleResponse> GoogleUserInfomation(string accessToken);
+
+        // external signin
+        AuthResult ExternalSignIn(string email);
+
+        // external signup
+        Task<AuthResult> ExternalSignUp(ExternalSignUp data);
+
     }
 }

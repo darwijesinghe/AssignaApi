@@ -4,13 +4,13 @@ using AssignaApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AssignaApi.Controllers
 {
+
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
@@ -19,14 +19,11 @@ namespace AssignaApi.Controllers
         private readonly IDataService _dataService;
 
         private readonly Helper _helper;
-        private readonly JwtConfig _jwtConfig;
 
-        public UserController(IDataService dataService, Helper helper,
-        IOptions<JwtConfig> jwtConfig)
+        public UserController(IDataService dataService, Helper helper)
         {
             _dataService = dataService;
             _helper = helper;
-            _jwtConfig = jwtConfig.Value;
         }
 
         // user registration
@@ -38,18 +35,18 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
 
             // check user existance
-            var mails = _dataService.AllUsers().Select(x => x.user_mail);
-            if (mails.Contains(data.email))
+            var mails = _dataService.AllUsers().Select(x => x.UserMail);
+            if (mails.Contains(data.Email))
             {
                 return new JsonResult(new
                 {
-                    message = "Email already exist",
+                    message = "Email already exist.",
                     success = false
                 });
             }
@@ -68,7 +65,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }
@@ -83,7 +80,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
@@ -91,24 +88,24 @@ namespace AssignaApi.Controllers
             // check user existance
             var user = _dataService.AllUsers().FirstOrDefault
             (
-                x => x.user_name == data.user_name
+                x => x.UserName == data.UserName
             );
 
             if (user is null)
             {
                 return new JsonResult(new
                 {
-                    message = "User is not found",
+                    message = "User is not found.",
                     success = false
                 });
             }
 
             // check user password
-            if (!_helper.VerifyPassword(data.password, user.password_hash, user.password_salt))
+            if (!_helper.VerifyPassword(data.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return new JsonResult(new
                 {
-                    message = "Username or password is incorrect",
+                    message = "Username or password is incorrect.",
                     success = false
                 });
             }
@@ -117,8 +114,8 @@ namespace AssignaApi.Controllers
             {
                 message = "Ok",
                 success = true,
-                token = user.verify_token,
-                refresh_token = user.refresh_token
+                token = user.VerifyToken,
+                refresh_token = user.RefreshToken
             });
         }
 
@@ -131,7 +128,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
@@ -139,14 +136,14 @@ namespace AssignaApi.Controllers
             // check user existance
             var user = _dataService.AllUsers().FirstOrDefault
             (
-                x => x.user_mail == data.email
+                x => x.UserMail == data.Email
             );
 
             if (user is null)
             {
                 return new JsonResult(new
                 {
-                    message = "User is not found",
+                    message = "User is not found.",
                     success = false
                 });
             }
@@ -158,14 +155,14 @@ namespace AssignaApi.Controllers
                 {
                     message = "Ok",
                     success = true,
-                    reset_token = result.reset_token
+                    result.reset_token
                 });
             }
             else
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }
@@ -180,7 +177,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
@@ -188,14 +185,14 @@ namespace AssignaApi.Controllers
             // check user and reset token is valid or not
             var user = _dataService.AllUsers().FirstOrDefault
             (
-                x => x.reset_token == data.reset_token
+                x => x.ResetToken == data.ResetToken
             );
 
-            if (user is null || user.reset_expires < DateTime.Now.ToUniversalTime())
+            if (user is null || user.ResetExpires < DateTime.Now.ToUniversalTime())
             {
                 return new JsonResult(new
                 {
-                    message = "Reset token is expired",
+                    message = "Reset token is expired.",
                     success = false
                 });
             }
@@ -213,7 +210,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }
@@ -228,7 +225,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
@@ -236,25 +233,25 @@ namespace AssignaApi.Controllers
             // check user and refresh token is valid or not
             var user = _dataService.AllUsers().FirstOrDefault
             (
-                x => x.refresh_token == data.refresh_token
+                x => x.RefreshToken == data.TokenRefresh
             );
 
 
-            if (user is null || user.refresh_expires < DateTime.Now)
+            if (user is null || user.RefreshExpires < DateTime.Now)
             {
                 return new JsonResult(new
                 {
-                    message = "Refresh token is expired",
+                    message = "Refresh token is expired.",
                     success = false
                 });
             }
 
             // check verify token is expired or not
-            if (user.expires_at > DateTime.Now)
+            if (user.ExpiresAt > DateTime.Now)
             {
                 return new JsonResult(new
                 {
-                    message = "Verify token is still not expired",
+                    message = "Verify token is still not expired.",
                     success = false
                 });
             }
@@ -266,8 +263,8 @@ namespace AssignaApi.Controllers
                 {
                     message = "Ok",
                     success = true,
-                    token = result.token,
-                    refresh_token = result.refresh_token
+                    result.token,
+                    result.refresh_token
                 });
             }
             else
@@ -293,6 +290,125 @@ namespace AssignaApi.Controllers
                 success = true,
                 data = result
             });
+        }
+
+        // external login
+        [HttpPost("external-login")]
+        public async Task<JsonResult> ExternalLogin([FromBody] ExternalSignIn data)
+        {
+            // validations
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult(new
+                {
+                    message = "Required data is not found.",
+                    success = false
+                });
+            }
+
+            // get external user info
+            switch (data.Provider)
+            {
+                case "Google":
+                    return await GoogleLogin(data);
+                default:
+                    return new JsonResult(new
+                    {
+                        message = "Sign in provider is not found.",
+                        success = false
+                    });
+            }
+            
+        }
+
+        // google signin
+        private async Task<JsonResult> GoogleLogin(ExternalSignIn data)
+        {
+            // get external user info
+            var info = await _dataService.GoogleUserInfomation(data.AccessToken);
+            if (string.IsNullOrEmpty(info.email))
+            {
+                return new JsonResult(new
+                {
+                    message = "Sign in information not found.",
+                    success = false
+                });
+            }
+
+            // sign in if user already has an account
+            var result = _dataService.ExternalSignIn(info.email);
+            if (result.success)
+            {
+                return new JsonResult(new
+                {
+                    message = "Ok",
+                    success = true,
+                    result.token,
+                    result.refresh_token
+                });
+            }
+            else
+            {
+                // create account if user not exist
+                var mails = _dataService.AllUsers().Select(x => x.UserMail);
+                if (!mails.Contains(info.email))
+                {
+                    // return user when no role provided
+                    // we need a user role type to assign to the new user. That can capture from the URl route when the user is signing up
+
+                    if (data.Role != Roles.member & data.Role != Roles.lead)
+                    {
+                        return new JsonResult(new
+                        {
+                            message = "Account type does not match with correct account type.",
+                            success = false
+                        });
+                    }
+
+                    // sign up user
+                    result = await _dataService.ExternalSignUp(new ExternalSignUp
+                    {
+                        GivenName = info.given_name,
+                        FamilyName = info.family_name,
+                        Picture = info.picture,
+                        EmailVerified = info.email_verified,
+                        Locale = info.locale,
+                        Email = info.email,
+                        Role = data.Role
+                    });
+
+                    if (!result.success)
+                    {
+                        return new JsonResult(new
+                        {
+                            message = "Error occurred during the sign up process.",
+                            success = false
+                        });
+                    }
+                }
+
+                // sign in user
+                result = _dataService.ExternalSignIn(info.email);
+                if (result.success)
+                {
+                    return new JsonResult(new
+                    {
+                        message = "Ok",
+                        success = true,
+                        result.token,
+                        result.refresh_token
+                    });
+                }
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        message = "Error occurred during the sign in process.",
+                        success = false
+                    });
+                }
+
+            }
         }
     }
 }

@@ -16,19 +16,19 @@ namespace AssignaApi.Services
     // configuration properties
     public class MailConfigurations
     {
-        public string userName { get; set; } = string.Empty;
-        public string password { get; set; } = string.Empty;
-        public string from { get; set; } = string.Empty;
-        public int port { get; set; }
-        public string server { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string From { get; set; } = string.Empty;
+        public int Port { get; set; }
+        public string Server { get; set; } = string.Empty;
     }
 
     public class MailService : IMailService
     {
-        public MailConfigurations _config { get; }
+        public MailConfigurations Config { get; }
         public MailService(MailConfigurations mailconfig)
         {
-            _config = mailconfig;
+            Config = mailconfig;
         }
 
         // mail send method
@@ -46,13 +46,13 @@ namespace AssignaApi.Services
                 {
                     // use mailkit for send mail
                     var mail = new MimeMessage();
-                    mail.From.Add(MailboxAddress.Parse(_config.from));
+                    mail.From.Add(MailboxAddress.Parse(Config.From));
                     mail.To.Add(MailboxAddress.Parse(to));
                     mail.Subject = subject;
                     mail.Body = new TextPart(TextFormat.Html) { Text = content };
 
-                    await smtp.ConnectAsync(_config.server, _config.port, SecureSocketOptions.StartTls);
-                    await smtp.AuthenticateAsync(_config.userName, _config.password);
+                    await smtp.ConnectAsync(Config.Server, Config.Port, SecureSocketOptions.StartTls);
+                    await smtp.AuthenticateAsync(Config.UserName, Config.Password);
                     await smtp.SendAsync(mail);
 
                     return new Result

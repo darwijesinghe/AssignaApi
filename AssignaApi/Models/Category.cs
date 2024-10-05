@@ -6,12 +6,14 @@ using System.Text.Json.Serialization;
 
 namespace AssignaApi.Models
 {
+#pragma warning disable IDE1006 // Naming Styles
     // data table
     public class Category
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int cat_id { get; set; }
+
         [MaxLength(50)]
         public string cat_name { get; set; } = string.Empty;
         public DateTime insertdate { get; set; }
@@ -19,12 +21,15 @@ namespace AssignaApi.Models
         // relationships
         [JsonIgnore]
         public List<Task>? task { get; set; }
+
     }
+
+#pragma warning restore IDE1006 // Naming Styles
 
     // data transferring model -> DTO
     public class CategoryDto
     {
-        public int cat_id { get; set; }
-        public string? cat_name { get; set; }
+        public int CatId { get; set; }
+        public string? CatName { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using AssignaApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AssignaApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231103201927_RemovedColumnFromUsersTable")]
+    partial class RemovedColumnFromUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,6 +138,7 @@ namespace AssignaApi.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("family_name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -145,6 +148,7 @@ namespace AssignaApi.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("given_name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
@@ -157,6 +161,7 @@ namespace AssignaApi.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("locale")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("password_hash")
@@ -166,6 +171,7 @@ namespace AssignaApi.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("picture")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("refresh_expires")

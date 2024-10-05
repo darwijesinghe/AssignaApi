@@ -6,10 +6,10 @@ namespace AssignaApi.Data
     // database options
     public class DatabaseOptions
     {
-        public int commandTimeout { get; set; }
-        public string connectionString { get; set; } = string.Empty;
-        public bool enableDetailedErrors { get; set; }
-        public int maxRetryCount { get; set; }
+        public int CommandTimeout { get; set; }
+        public string ConnectionString { get; set; } = string.Empty;
+        public bool EnableDetailedErrors { get; set; }
+        public int MaxRetryCount { get; set; }
     }
 
     public class DatabaseOptionsSetup : IConfigureOptions<DatabaseOptions>
@@ -25,7 +25,7 @@ namespace AssignaApi.Data
         public void Configure(DatabaseOptions options)
         {
             var connection = _configuration.GetConnectionString("DefaultConnection");
-            options.connectionString = connection;
+            options.ConnectionString = connection;
 
             // bind rest of values
             _configuration.GetSection("DatabaseOptions").Bind(options);

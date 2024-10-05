@@ -18,11 +18,11 @@ namespace AssignaApi.Controllers
     {
         // services
         private readonly IDataService _dataService;
-        private IMailService _mailSend { get; }
+        private IMailService MailSend { get; }
         public LeadTasksController(IDataService dataService, IMailService mailSend)
         {
             _dataService = dataService;
-            _mailSend = mailSend;
+            MailSend = mailSend;
         }
 
         // return all task
@@ -100,7 +100,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Requested task is not found",
+                    message = "Requested task is not found.",
                     success = false
                 });
 
@@ -121,29 +121,29 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
 
             // check category
             var category = _dataService.AllCategories();
-            if (!category.Any(x => x.cat_id == data.tsk_category))
+            if (!category.Any(x => x.CatId == data.TskCategory))
             {
                 return new JsonResult(new
                 {
-                    message = "Category id is not valid",
+                    message = "Category id is not valid.",
                     success = false
                 });
             }
 
             // check assignee
             var member = _dataService.TeamMembers();
-            if (!member.Any(x => x.user_id == data.member))
+            if (!member.Any(x => x.UserId == data.Member))
             {
                 return new JsonResult(new
                 {
-                    message = "Member id is not valid",
+                    message = "Member id is not valid.",
                     success = false
                 });
             }
@@ -152,15 +152,15 @@ namespace AssignaApi.Controllers
             // send data to save a new task
             var task = new TaskDto()
             {
-                tsk_title = data.tsk_title,
-                deadline = Convert.ToDateTime(data.deadline),
-                tsk_note = data.tsk_note,
-                pri_high = (data.priority == PriLevels.high) ? true : false,
-                pri_medium = (data.priority == PriLevels.medium) ? true : false,
-                pri_low = (data.priority == PriLevels.low) ? true : false,
-                cat_id = data.tsk_category,
-                user_id = data.member,
-                pending = true
+                TskTitle = data.TskTitle,
+                Deadline = Convert.ToDateTime(data.Deadline),
+                TskNote = data.TskNote,
+                PriHigh = (data.Priority == PriLevels.high),
+                PriMedium = (data.Priority == PriLevels.medium),
+                PriLow = (data.Priority == PriLevels.low),
+                CatId = data.TskCategory,
+                UserId = data.Member,
+                Pending = true
             };
 
             var result = await _dataService.SaveTaskAsync(task);
@@ -176,7 +176,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }
@@ -192,20 +192,20 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
 
             // check task is already completed or not
-            var complete = await _dataService.TaskInfo(data.tsk_id);
+            var complete = await _dataService.TaskInfo(data.TskId);
             if (complete.Count > 0)
             {
-                if (complete.First().complete)
+                if (complete.First().Complete)
                 {
                     return new JsonResult(new
                     {
-                        message = "Task is already completed",
+                        message = "Task is already completed.",
                         success = false
                     });
                 }
@@ -214,29 +214,29 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Task is not found to edit",
+                    message = "Task is not found to edit.",
                     success = false
                 });
             }
 
             // check category
             var category = _dataService.AllCategories();
-            if (!category.Any(x => x.cat_id == data.tsk_category))
+            if (!category.Any(x => x.CatId == data.TskCategory))
             {
                 return new JsonResult(new
                 {
-                    message = "Category id is not valid",
+                    message = "Category id is not valid.",
                     success = false
                 });
             }
 
             // check assignee
             var member = _dataService.TeamMembers();
-            if (!member.Any(x => x.user_id == data.member))
+            if (!member.Any(x => x.UserId == data.Member))
             {
                 return new JsonResult(new
                 {
-                    message = "Member id is not valid",
+                    message = "Member id is not valid.",
                     success = false
                 });
             }
@@ -245,16 +245,16 @@ namespace AssignaApi.Controllers
             // send data to save a new task
             var task = new TaskDto()
             {
-                tsk_id = data.tsk_id,
-                tsk_title = data.tsk_title,
-                deadline = Convert.ToDateTime(data.deadline),
-                tsk_note = data.tsk_note,
-                pri_high = (data.priority == PriLevels.high) ? true : false,
-                pri_medium = (data.priority == PriLevels.medium) ? true : false,
-                pri_low = (data.priority == PriLevels.low) ? true : false,
-                cat_id = data.tsk_category,
-                user_id = data.member,
-                pending = true
+                TskId = data.TskId,
+                TskTitle = data.TskTitle,
+                Deadline = Convert.ToDateTime(data.Deadline),
+                TskNote = data.TskNote,
+                PriHigh = (data.Priority == PriLevels.high),
+                PriMedium = (data.Priority == PriLevels.medium),
+                PriLow = (data.Priority == PriLevels.low),
+                CatId = data.TskCategory,
+                UserId = data.Member,
+                Pending = true
             };
 
             var result = await _dataService.EditTaskAsync(task);
@@ -270,7 +270,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }
@@ -285,17 +285,17 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
 
-            var task = await _dataService.TaskInfo(data.tsk_id);
+            var task = await _dataService.TaskInfo(data.TskId);
             if (task.Count == 0)
             {
                 return new JsonResult(new
                 {
-                    message = "Task is not found to delete",
+                    message = "Task is not found to delete.",
                     success = false
                 });
 
@@ -314,7 +314,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Server error",
+                    message = "Server error.",
                     success = false
                 });
             }
@@ -329,39 +329,39 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Required data is not found",
+                    message = "Required data is not found.",
                     success = false
                 });
             }
 
             // check task is already completed or not
-            var complete = await _dataService.TaskInfo(data.tsk_id);
+            var complete = await _dataService.TaskInfo(data.TskId);
             if (complete.Count > 0)
             {
-                if (complete.First().complete)
+                if (complete.First().Complete)
                 {
                     return new JsonResult(new
                     {
-                        message = "Task is already completed",
+                        message = "Task is already completed.",
                         success = false
                     });
                 }
             }
 
             // get user email
-            var task = await _dataService.TaskInfo(data.tsk_id);
+            var task = await _dataService.TaskInfo(data.TskId);
             if (task.Count > 0)
             {
                 // mail subject
                 string subject = "Assigna API task reminder";
 
                 // mail body
-                string body = data.message;
+                string body = data.Message;
 
                 // assignee mail
-                string mail = task.FirstOrDefault().user_mail!;
+                string mail = task.FirstOrDefault().UserMail!;
 
-                var result = await _mailSend.SendMailAsync(mail, subject, body);
+                var result = await MailSend.SendMailAsync(mail, subject, body);
                 if (result.success)
                 {
                     return new JsonResult(new
@@ -374,7 +374,7 @@ namespace AssignaApi.Controllers
                 {
                     return new JsonResult(new
                     {
-                        message = "Server error",
+                        message = "Server error.",
                         success = false
                     });
                 }
@@ -383,7 +383,7 @@ namespace AssignaApi.Controllers
             {
                 return new JsonResult(new
                 {
-                    message = "Task is not found to send a remind",
+                    message = "Task is not found to send a remind.",
                     success = false
                 });
             }
