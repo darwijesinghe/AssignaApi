@@ -91,7 +91,7 @@ The application primarily demonstrates basic CRUD operations using a .NET Core R
 // Response
 
 {
-    "message": "Ok",
+    "message": "Ok.",
     "success": true
 }
 ```
@@ -112,7 +112,7 @@ The application primarily demonstrates basic CRUD operations using a .NET Core R
 // Response
 
 {
-    "message": "Ok",
+    "message": "Ok.",
     "success": true,
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     "refresh_token": "4vZkirs9ZxD7kx5IgjQ9HcG4aze6RoEv..."
@@ -134,7 +134,7 @@ The application primarily demonstrates basic CRUD operations using a .NET Core R
 // Response
 
 {
-    "message": "Ok",
+    "message": "Ok.",
     "success": true,
     "reset_token": "4vZkirs9ZxD7kx5IgjQ9HcG4aze6RoEv4CwFdzrd5wt..."
 }
@@ -157,7 +157,7 @@ The application primarily demonstrates basic CRUD operations using a .NET Core R
 // Response
 
 {
-    "message": "Ok",
+    "message": "Ok.",
     "success": true
 }
 ```
@@ -177,7 +177,7 @@ The application primarily demonstrates basic CRUD operations using a .NET Core R
 // Response
 
 {
-    "message": "Ok",
+    "message": "Ok.",
     "success": true,
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     "refresh_token": "4vZkirs9ZxD7kx5IgjQ9HcG4aze6RoEv..."
@@ -269,7 +269,7 @@ https://[base-url]/leadtasks/low-priority
 // Response
 
 {
-  "message" = "Ok",
+  "message" = "Ok.",
   "success" = true
 }
 ```
@@ -295,7 +295,7 @@ https://[base-url]/leadtasks/low-priority
 // Response
 
 {
-  "message" = "Ok",
+  "message" = "Ok.",
   "success" = true
 }
 ```
@@ -315,7 +315,7 @@ https://[base-url]/leadtasks/low-priority
 // Response
 
 {
-  "message" = "Ok",
+  "message" = "Ok.",
   "success" = true
 }
 ```
@@ -336,7 +336,7 @@ https://[base-url]/leadtasks/low-priority
 // Response
 
 {
-  "message" = "Ok",
+  "message" = "Ok.",
   "success" = true
 }
 ```
@@ -408,7 +408,7 @@ https://[base-url]/membertasks/low-priority
 // Response
 
 {
-  "message" = "Ok",
+  "message" = "Ok.",
   "success" = true
 }
 ```
@@ -428,7 +428,7 @@ https://[base-url]/membertasks/low-priority
 // Response
 
 {
-  "message" = "Ok",
+  "message" = "Ok.",
   "success" = true
 }
 ```
