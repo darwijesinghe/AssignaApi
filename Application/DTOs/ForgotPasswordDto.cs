@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for the forgot password
+    /// DTO for the forgot password.
     /// </summary>
     public class ForgotPasswordDto
     {

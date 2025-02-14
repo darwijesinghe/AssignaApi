@@ -5,7 +5,7 @@ using static Application.Helpers.FilterAttributes;
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for new task
+    /// DTO for new task.
     /// </summary>
     public class NewTaskDto
     {

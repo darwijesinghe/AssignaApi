@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Application.Interfaces.Services
 {
     /// <summary>
-    /// Interface for mail service
+    /// Interface for mail service.
     /// </summary>
     public interface IMailService
     {

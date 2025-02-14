@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace Domain.Classes
 {
     /// <summary>
-    /// Domain class for categories
+    /// Domain class for categories.
     /// </summary>
     public class Category
     {

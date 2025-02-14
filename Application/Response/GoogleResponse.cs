@@ -1,7 +1,7 @@
 ﻿namespace Application.Response
 {
     /// <summary>
-    /// Google auth response class
+    /// Google AUTH response class.
     /// </summary>
     public class GoogleResponse
     {

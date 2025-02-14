@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for the refresh token
+    /// DTO for the refresh token.
     /// </summary>
     public class RefreshTokenDto
     {

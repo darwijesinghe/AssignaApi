@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for delete task
+    /// DTO for delete task.
     /// </summary>
     public class DeleteTaskDto
     {

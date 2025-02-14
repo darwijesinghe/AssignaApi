@@ -1,7 +1,7 @@
 ﻿namespace Infrastructure.Configurations
 {
     /// <summary>
-    /// Mail configuration class
+    /// Mail configuration class.
     /// </summary>
     public class MailConfigurations
     {

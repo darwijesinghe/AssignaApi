@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for task reminder
+    /// DTO for task reminder.
     /// </summary>
     public class ReminderDto
     {

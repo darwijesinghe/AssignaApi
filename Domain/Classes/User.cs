@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace Domain.Classes
 {
     /// <summary>
-    /// Domain class of user information
+    /// Domain class of user information.
     /// </summary>
     public class User
     {

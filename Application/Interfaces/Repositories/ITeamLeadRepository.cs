@@ -5,11 +5,11 @@ using Task = Domain.Classes.Task;
 namespace Application.Interfaces.Repositories
 {
     /// <summary>
-    /// Interface for team lead tasks db operations
+    /// Interface for team lead tasks db operations.
     /// </summary>
     public interface ITeamLeadRepository
     {
-        // <summary>
+        /// <summary>
         /// Saves a task.
         /// </summary>
         /// <param name="data">The data containing the task information to be saved.</param>

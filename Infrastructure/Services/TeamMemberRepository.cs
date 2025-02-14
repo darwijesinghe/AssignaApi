@@ -9,7 +9,7 @@ using Task = Domain.Classes.Task;
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// Repository implementation for ITeamMemberRepository
+    /// Repository implementation for ITeamMemberRepository.
     /// </summary>
     public class TeamMemberRepository : ITeamMemberRepository
     {

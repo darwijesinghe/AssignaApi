@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for add task note
+    /// DTO for add task note.
     /// </summary>
     public class AddNoteDto
     {

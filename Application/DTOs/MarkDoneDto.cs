@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for mark task as done
+    /// DTO for mark task as done.
     /// </summary>
     public class MarkDoneDto
     {

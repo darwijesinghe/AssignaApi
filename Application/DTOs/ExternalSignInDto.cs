@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// External login DTO class
+    /// External login DTO class.
     /// </summary>
     public class ExternalSignInDto
     {

@@ -6,7 +6,7 @@ using Task = Domain.Classes.Task;
 namespace Application.Interfaces.Repositories
 {
     /// <summary>
-    /// Interface for common tasks db operations
+    /// Interface for common tasks db operations.
     /// </summary>
     public interface ITaskRepository
     {

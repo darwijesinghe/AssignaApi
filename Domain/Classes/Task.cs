@@ -6,12 +6,12 @@ using System.Text.Json.Serialization;
 namespace Domain.Classes
 {
     /// <summary>
-    /// Domain class for task
+    /// Domain class for task.
     /// </summary>
     public class Task
     {
         /// <summary>
-        /// Priamry key
+        /// Primary key
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

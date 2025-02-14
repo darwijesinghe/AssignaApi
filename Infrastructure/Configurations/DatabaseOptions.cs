@@ -1,7 +1,7 @@
 ﻿namespace Infrastructure.Configurations
 {
     /// <summary>
-    /// DB option class
+    /// DB option class.
     /// </summary>
     public class DatabaseOptions
     {

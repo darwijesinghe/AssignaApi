@@ -7,7 +7,7 @@ using System.Text;
 namespace Application.Helpers
 {
     /// <summary>
-    /// Helper class that helps to use cases
+    /// Helper class that helps to use cases.
     /// </summary>
     public static class Helper
     {

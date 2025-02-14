@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Application.Interfaces.Services
 {
     /// <summary>
-    /// Interface for team lead tasks operations
+    /// Interface for team lead tasks operations.
     /// </summary>
     public interface ITeamLeadService
     {

@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for task info
+    /// DTO for task info.
     /// </summary>
     public class TaskDto
     {

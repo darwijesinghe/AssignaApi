@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for the user registration
+    /// DTO for the user registration.
     /// </summary>
     public class UserRegisterDto
     {

@@ -1,7 +1,7 @@
 ﻿namespace Application.Configurations
 {
     /// <summary>
-    /// Levels of priorities
+    /// Levels of priorities.
     /// </summary>
     public class PriorityLevel
     {

@@ -1,7 +1,7 @@
 ﻿namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for external signup
+    /// DTO for external signup.
     /// </summary>
     public class ExternalSignUpDto
     {

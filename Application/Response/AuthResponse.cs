@@ -1,7 +1,7 @@
 ﻿namespace Application.Response
 {
     /// <summary>
-    /// Auth response class
+    /// AUTH response class.
     /// </summary>
     public class AuthResponse
     {

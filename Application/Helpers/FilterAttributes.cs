@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Application.Helpers
 {
     /// <summary>
-    /// Helper class for the filter attributes
+    /// Helper class for the filter attributes.
     /// </summary>
     public class FilterAttributes
     {

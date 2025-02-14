@@ -1,8 +1,8 @@
 ﻿namespace Application.General
 {
     /// <summary>
-    /// Represents the data required to generate a JWT token for a user
-    /// Includes the user's basic details and token properties
+    /// Represents the data required to generate a JWT token for a user.
+    /// Includes the user's basic details and token properties.
     /// </summary>
     public class MakeToken
     {

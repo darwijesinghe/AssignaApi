@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for the password reset
+    /// DTO for the password reset.
     /// </summary>
     public class ResetPasswordDto
     {

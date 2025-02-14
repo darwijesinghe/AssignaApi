@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 namespace Infrastructure.Configurations
 {
     /// <summary>
-    /// Class for sets up the configuration for JWT options
+    /// Class for sets up the configuration for JWT options.
     /// </summary>
     public class JwtConfigSetup : IConfigureOptions<JwtConfig>
     {

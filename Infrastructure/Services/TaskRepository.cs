@@ -14,7 +14,7 @@ using Task = Domain.Classes.Task;
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// Repository implementation for ITaskRepository
+    /// Repository implementation for ITaskRepository.
     /// </summary>
     public class TaskRepository : ITaskRepository
     {

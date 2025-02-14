@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Application.Interfaces.Repositories
 {
     /// <summary>
-    /// Interface for user related db operations
+    /// Interface for user related db operations.
     /// </summary>
     public interface IUserRepository
     {

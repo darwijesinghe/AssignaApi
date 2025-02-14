@@ -5,7 +5,7 @@ using Task = Domain.Classes.Task;
 namespace Application.Interfaces.Repositories
 {
     /// <summary>
-    /// Interface for team member tasks db operations
+    /// Interface for team member tasks db operations.
     /// </summary>
     public interface ITeamMemberRepository
     {

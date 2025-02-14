@@ -1,20 +1,20 @@
-﻿using System;
+﻿using Application.Configurations;
+using Application.General;
+using Application.Interfaces.Services;
+using Application.Response;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Options;
-using Application.General;
-using Application.Response;
-using Microsoft.AspNetCore.Http;
-using Application.Interfaces.Services;
-using Application.Configurations;
 
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// Service implemetation class for IJwtService
+    /// Service implementation class for IJwtService.
     /// </summary>
     public class JwtService : IJwtService
     {

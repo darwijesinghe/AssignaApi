@@ -1,7 +1,7 @@
 ﻿namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for category info
+    /// DTO for category info.
     /// </summary>
     public class CategoryDto
     {

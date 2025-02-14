@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Classes
 {
     /// <summary>
-    /// Domain class for tasks priorities
+    /// Domain class for tasks priorities.
     /// </summary>
     public class Priority
     {

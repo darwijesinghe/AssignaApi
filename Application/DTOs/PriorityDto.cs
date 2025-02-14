@@ -1,7 +1,7 @@
 ﻿namespace Application.DTOs
 {
     /// <summary>
-    /// Data transfer model
+    /// Data transfer model.
     /// </summary>
     public class PriorityDto
     {

@@ -1,20 +1,20 @@
-﻿using Application.Interfaces.Services;
-using Application.Response;
+﻿using Application.Configurations;
 using Application.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Application.Helpers;
 using Application.Interfaces.Repositories;
-using Application.Configurations;
+using Application.Interfaces.Services;
+using Application.Response;
+using Domain.Classes;
 using Microsoft.Extensions.Options;
 using System;
-using Application.Helpers;
-using Domain.Classes;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
     /// <summary>
-    /// Service implementation of IUserService
+    /// Service implementation of IUserService.
     /// </summary>
     public class UserService : IUserService
     {

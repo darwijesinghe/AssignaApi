@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Infrastructure.Data
 {
     /// <summary>
-    /// Data context class
+    /// Data context class.
     /// </summary>
     public class DataContext : DbContext
     {

@@ -13,7 +13,7 @@ using Task = Domain.Classes.Task;
 namespace Application.Services
 {
     /// <summary>
-    /// Service implementation of ITaskService
+    /// Service implementation of ITaskService.
     /// </summary>
     public class TaskService : ITaskService
     {

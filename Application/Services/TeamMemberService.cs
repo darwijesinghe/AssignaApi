@@ -11,7 +11,7 @@ using Task = Domain.Classes.Task;
 namespace Application.Services
 {
     /// <summary>
-    /// Service implementation of ITeamMemberService
+    /// Service implementation of ITeamMemberService.
     /// </summary>
     public class TeamMemberService : ITeamMemberService
     {

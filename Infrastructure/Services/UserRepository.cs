@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace Infrastructure.Services
 {
     /// <summary>
-    /// Repository implementation for IUserRepository
+    /// Repository implementation for IUserRepository.
     /// </summary>
     public class UserRepository : IUserRepository
     {

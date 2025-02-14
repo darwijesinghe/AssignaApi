@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Application.Interfaces.Services
 {
     /// <summary>
-    /// Interface for user related operations
+    /// Interface for user related operations.
     /// </summary>
     public interface IUserService
     {

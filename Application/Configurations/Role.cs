@@ -1,7 +1,7 @@
 namespace Application.Configurations
 {
     /// <summary>
-    /// Application user roles
+    /// Application user roles.
     /// </summary>
     public static class Role
     {

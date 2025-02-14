@@ -3,7 +3,7 @@
 namespace Application.DTOs
 {
     /// <summary>
-    /// DTO for user info
+    /// DTO for user info.
     /// </summary>
     public class UserDto
     {
