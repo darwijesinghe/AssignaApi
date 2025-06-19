@@ -103,12 +103,21 @@ namespace AssignaApi.Controllers
                     success = false
                 });
 
+            // gets the result
+            var result = await _userService.ResetVerifyTokenAsync(new RefreshTokenDto { TokenRefresh = user.RefreshToken });
+            if (!result.Success)
+                return new JsonResult(new
+                {
+                    message = "Token updating process has failed. Please contact the admin.",
+                    success = true
+                });
+
             return new JsonResult(new
             {
-                message       = "Ok.",
-                success       = true,
-                token         = user.VerifyToken,
-                refresh_token = user.RefreshToken
+                message = "Ok.",
+                success = true,
+                result.Token,
+                result.RefreshToken
             });
         }
 
@@ -215,12 +224,12 @@ namespace AssignaApi.Controllers
                     success = false
                 });
 
-            // check the user and refresh token is valid or not
+            // check the user is valid or not
             var user = (await _userService.AllUsers())?.FirstOrDefault(x => x.RefreshToken == data.TokenRefresh);
-            if (user is null || user.RefreshExpires < DateTime.Now)
+            if (user is null)
                 return new JsonResult(new
                 {
-                    message = "Refresh token is expired.",
+                    message = "No user is found.",
                     success = false
                 });
 
@@ -232,21 +241,29 @@ namespace AssignaApi.Controllers
                     success = false
                 });
 
-            // gets the result
-            var result = await _userService.ResetVerifyTokenAsync(data);
-            if (result.Success)
+            // checks the refresh token is expired or not
+            if (user.RefreshExpires < DateTime.Now)
                 return new JsonResult(new
                 {
-                    message = "Ok.",
-                    success = true,
-                    result.Token,
-                    result.RefreshToken
+                    message = "Refresh token is expired.",
+                    success = false
+                });
+
+            // gets the result
+            var result = await _userService.ResetVerifyTokenAsync(data);
+            if (!result.Success)
+                return new JsonResult(new
+                {
+                    message = "Token updating process has failed. Please contact the admin.",
+                    success = true
                 });
 
             return new JsonResult(new
             {
-                message = "Ok",
-                success = true
+                message = "Ok.",
+                success = true,
+                result.Token,
+                result.RefreshToken
             });
         }
 
@@ -303,7 +320,7 @@ namespace AssignaApi.Controllers
         }
 
         /// <summary>
-        /// External sigin process.
+        /// External signing process.
         /// </summary>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
@@ -385,5 +402,21 @@ namespace AssignaApi.Controllers
                 });
             }
         }
+
+        //[HttpGet("verify-email")]
+        //public async Task<IActionResult> VerifyEmail(string token)
+        //{
+        //    var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailVerificationToken == token);
+
+        //    if (user == null)
+        //        return BadRequest("Invalid or expired token.");
+
+        //    user.IsEmailVerified = true;
+        //    user.EmailVerifiedAt = DateTime.UtcNow;
+        //    user.EmailVerificationToken = null;
+
+        //    await _context.SaveChangesAsync();
+        //    return Ok("Email successfully verified!");
+        //}
     }
 }
