@@ -416,7 +416,7 @@ namespace AssignaApi.Controllers
             {
                 // creates account if the user not exist
                 var mails = (await _userService.AllUsers())?.Select(x => x.UserMail);
-                if (mails.HasValue() && !mails.Contains(info.Email))
+                if (mails is not null && !mails.Contains(info.Email))
                 {
                     // returns the user when no role is provided
                     // we need a user role type to assign to the new user. that can capture from the URl route when the user is signing up
