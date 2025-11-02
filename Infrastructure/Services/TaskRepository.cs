@@ -230,7 +230,8 @@ namespace Infrastructure.Services
                 var tasks = await MakeTask();
 
                 // returns task for the task id
-                return tasks.Where(x => x.TaskId == taskId).OrderBy(o => o.TaskId);
+                return tasks.Where(x => x.TaskId == taskId)
+                    .OrderBy(o => o.TaskId);
             }
             catch (Exception ex)
             {
@@ -251,7 +252,7 @@ namespace Infrastructure.Services
             try
             {
                 // retrieves all tasks
-                var tasks = await _context.Task.OrderBy(o => o.TaskId).ToListAsync();
+                var tasks = await _context.Task.Include(x => x.User).Include(x => x.Category).OrderBy(o => o.TaskId).ToListAsync();
                 if (!tasks.HasValue())
                     return Enumerable.Empty<Task>();
 

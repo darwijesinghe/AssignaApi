@@ -2,6 +2,7 @@ using Application.Configurations;
 using Application.DTOs;
 using Application.Helpers;
 using Application.Interfaces.Services;
+using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,19 +18,22 @@ namespace AssignaApi.Controllers
     {
         // Services
         private readonly IUserService _userService;
-        private IMailService          _mailService;
+        private readonly IMailService _mailService;
         private readonly ITaskService _taskService;
+        private readonly ClientApp    _clientApp;
 
-        public UserController(IUserService userService, IMailService mailService, ITaskService taskService)
+        public UserController(IUserService userService, IMailService mailService, ITaskService taskService, ClientApp clientApp)
         {
             _userService = userService;
             _mailService = mailService;
             _taskService = taskService;
+            _clientApp   = clientApp;
         }
 
         /// <summary>
         /// Registers a new user to the system.
         /// </summary>
+        /// <param name="data">The user registration data.</param>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
         /// </returns>
@@ -44,7 +48,7 @@ namespace AssignaApi.Controllers
                     success = false
                 });
 
-            // checks the user existance
+            // checks the user existence
             var mails = (await _userService.AllUsers())?.Select(x => x.UserMail);
             if (mails.HasValue() && mails.Contains(data.Email))
                 return new JsonResult(new
@@ -72,6 +76,7 @@ namespace AssignaApi.Controllers
         /// <summary>
         /// Logins user to the system.
         /// </summary>
+        /// <param name="data">The user login data.</param>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
         /// </returns>
@@ -86,7 +91,7 @@ namespace AssignaApi.Controllers
                     success = false
                 });
 
-            // checks the user existance
+            // checks the user existence
             var user = (await _userService.AllUsers())?.FirstOrDefault(x => x.UserName == data.UserName);
             if (user is null)
                 return new JsonResult(new
@@ -122,8 +127,59 @@ namespace AssignaApi.Controllers
         }
 
         /// <summary>
+        /// Sends password reset link.
+        /// </summary>
+        /// <param name="email">The user email address.</param>
+        /// <returns>
+        /// A <see cref="JsonResult"/> containing the task data.
+        /// </returns>
+        [HttpGet("send-reset-link")]
+        public async Task<JsonResult> SendResetLink(string email)
+        {
+            if(string.IsNullOrWhiteSpace(email))
+                return new JsonResult(new
+                {
+                    message = "Required data is not found.",
+                    success = false
+                });
+
+            // checks the user existence
+            var user = (await _userService.AllUsers())?.FirstOrDefault(x => x.UserMail == email);
+            if (user is null)
+                return new JsonResult(new
+                {
+                    message = "User is not found.",
+                    success = false
+                });
+
+            // gets the reset token and prepare the redirect link
+            var result = await _userService.ForgotTokenAsync(new ForgotPasswordDto { Email = email });
+            if (result.Success)
+            {
+                // URL encode the token to be safe
+                string resetLink = $"{_clientApp.PasswordResetUrl}={Uri.EscapeDataString(result.ResetToken)}";
+
+                // sends the email
+                await _mailService.SendMailAsync(email, "Password Reset", $"Click <a href='{resetLink}'>here</a> to reset your password.");
+
+                return new JsonResult(new
+                {
+                    message = "Reset link sent to your email.",
+                    success = true
+                });
+            }
+
+            return new JsonResult(new
+            {
+                message = "Server error.",
+                success = false
+            });
+        }
+
+        /// <summary>
         /// Sends the password reset token.
         /// </summary>
+        /// <param name="data">Forgot password data.</param>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
         /// </returns>
@@ -138,7 +194,7 @@ namespace AssignaApi.Controllers
                     success = false
                 });
 
-            // checks the user existance
+            // checks the user existence
             var user = (await _userService.AllUsers())?.FirstOrDefault(x => x.UserMail == data.Email);
             if (user is null)
                 return new JsonResult(new
@@ -167,6 +223,7 @@ namespace AssignaApi.Controllers
         /// <summary>
         /// Resets the user password.
         /// </summary>
+        /// <param name="data">Reset password data.</param>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
         /// </returns>
@@ -193,11 +250,16 @@ namespace AssignaApi.Controllers
             // gets the result
             var result = await _userService.ResetPasswordAsync(data);
             if (result.Success)
+            {
+                // sends the email
+                await _mailService.SendMailAsync(user.UserMail, "Password Reset", "Your password reset successfully.");
+
                 return new JsonResult(new
                 {
                     message = "Ok.",
                     success = true
                 });
+            }
 
             return new JsonResult(new
             {
@@ -206,10 +268,10 @@ namespace AssignaApi.Controllers
             });
         }
 
-
         /// <summary>
         /// Sends the refresh token.
         /// </summary>
+        /// <param name="data">Token refresh data.</param>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
         /// </returns>
@@ -255,7 +317,7 @@ namespace AssignaApi.Controllers
                 return new JsonResult(new
                 {
                     message = "Token updating process has failed. Please contact the admin.",
-                    success = true
+                    success = false
                 });
 
             return new JsonResult(new
@@ -291,6 +353,7 @@ namespace AssignaApi.Controllers
         /// <summary>
         /// Directs request to the corresponding external sign in provider.
         /// </summary>
+        /// <param name="data">External login data.</param>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
         /// </returns>
@@ -322,6 +385,7 @@ namespace AssignaApi.Controllers
         /// <summary>
         /// External signing process.
         /// </summary>
+        /// <param name="data">External login data.</param>
         /// <returns>
         /// A <see cref="JsonResult"/> containing the task data.
         /// </returns>
@@ -367,7 +431,7 @@ namespace AssignaApi.Controllers
                     // gets the result of signup
                     result = await _userService.ExternalSignUp(new ExternalSignUpDto
                     {
-                        GivenName     = info.GivenName,
+                        GivenName     = info.GivenName ?? info.Name,
                         FamilyName    = info.FamilyName,
                         Picture       = info.Picture,
                         EmailVerified = info.EmailVerified,
@@ -384,7 +448,7 @@ namespace AssignaApi.Controllers
                         });
                 }
 
-                // gets the result of sigin
+                // gets the result of sign-in
                 result = _userService.ExternalSignIn(info.Email);
                 if (result.Success)
                     return new JsonResult(new
@@ -418,5 +482,49 @@ namespace AssignaApi.Controllers
         //    await _context.SaveChangesAsync();
         //    return Ok("Email successfully verified!");
         //}
+
+        /// <summary>
+        /// Gets the each task count.
+        /// </summary>
+        /// <param name="email">The user email address.</param>
+        /// <returns>
+        /// A <see cref="JsonResult"/> containing the task data.
+        /// </returns>
+        [HttpGet("task-count")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<JsonResult> TaskCount(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return new JsonResult(new
+                {
+                    message = "Required data is not found.",
+                    success = false
+                });
+
+            // checks the user existence
+            var user = (await _userService.AllUsers())?.FirstOrDefault(x => x.UserMail == email);
+            if (user is null)
+                return new JsonResult(new
+                {
+                    message = "User is not found.",
+                    success = false
+                });
+
+            // gets the tasks counts
+            var counts = await _userService.TaskCount();
+            if(counts is null)
+                return new JsonResult(new
+                {
+                    message = "No data found.",
+                    success = false
+                });
+
+            return new JsonResult(new
+            {
+                message = "Ok.",
+                success = true,
+                data    = counts
+            });
+        }
     }
 }

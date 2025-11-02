@@ -22,12 +22,14 @@ namespace Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IJwtService     _jwtService;
         private readonly JwtConfig       _jwtConfig;
+        private readonly ITaskRepository _taskRepository;
 
-        public UserService(IUserRepository userRepository, IJwtService jwtService, IOptions<JwtConfig> jwtConfig)
+        public UserService(IUserRepository userRepository, IJwtService jwtService, IOptions<JwtConfig> jwtConfig, ITaskRepository taskRepository)
         {
             _userRepository = userRepository;
             _jwtService     = jwtService;
             _jwtConfig      = jwtConfig.Value;
+            _taskRepository = taskRepository;
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace Application.Services
                     RefreshToken   = u.RefreshToken,
                     RefreshExpires = u.RefreshExpires,
                     ResetToken     = u.ResetToken,
-                    ResetExpires   = u.RefreshExpires,
+                    ResetExpires   = u.ResetExpires,
                     IsAdmin        = u.IsAdmin
                 })
                 .OrderBy(o => o.UserId)
@@ -175,8 +177,7 @@ namespace Application.Services
                 // password reset data
                 var user = new User()
                 {
-                    ResetToken   = null,
-                    ResetExpires = null,
+                    ResetToken   = data.ResetToken,
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt
                 };
@@ -309,6 +310,35 @@ namespace Application.Services
             catch (Exception ex)
             {
                 return new AuthResponse { Message = ex.Message, Success = false };
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<TaskCountDto?> TaskCount()
+        {
+            try
+            {
+                // gets all tasks for the logged in user
+                var tasks = await _taskRepository.AllTasks();
+                if (!tasks.HasValue())
+                    return null;
+
+                // each task count
+                var taskCount = new TaskCountDto
+                {
+                    AllTask        = tasks.Count(),
+                    Pending        = tasks.Where(x => x.Pending).Count(),
+                    Complete       = tasks.Where(x => x.Complete).Count(),
+                    MediumPriority = tasks.Where(x => x.MediumPriority).Count(),
+                    HighPriority   = tasks.Where(x => x.HighPriority).Count(),
+                    LowPriority    = tasks.Where(x => x.LowPriority).Count()
+                };
+
+                return taskCount;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

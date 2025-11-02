@@ -80,5 +80,13 @@ namespace Application.Interfaces.Services
         /// An <see cref="AuthResponse"/> result.
         /// </returns>
         Task<AuthResponse> ExternalSignUp(ExternalSignUpDto data);
+
+        /// <summary>
+        /// Gets each task count.
+        /// </summary>
+        /// <returns>
+        /// The type of <see cref="TaskCountDto"/> containg the each task count; otherwise null.
+        /// </returns>
+        Task<TaskCountDto?> TaskCount();
     }
 }

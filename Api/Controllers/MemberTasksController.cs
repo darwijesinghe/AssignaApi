@@ -38,7 +38,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -56,7 +58,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -74,7 +78,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -92,7 +98,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -110,7 +118,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -128,7 +138,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -152,7 +164,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 

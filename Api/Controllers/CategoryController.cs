@@ -2,6 +2,7 @@ using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace AssignaApi.Controllers
 {
@@ -25,10 +26,10 @@ namespace AssignaApi.Controllers
         /// </returns>
         [HttpGet("categories")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public JsonResult Categories()
+        public async Task<JsonResult> Categories()
         {
             // gets categories
-            var result = _taskService.AllCategories();
+            var result = await _taskService.AllCategories();
 
             return new JsonResult(new
             {

@@ -41,7 +41,7 @@ namespace AssignaApi
                 options.AddPolicy(name: cors,
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:3000")
+                        policy.WithOrigins(_configuration.GetSection("ClientApp:BaseUrl").Value)
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                     });
@@ -135,6 +135,10 @@ namespace AssignaApi
             // get mail service setting values
             var mailconfig = _configuration.GetSection("MailConfigurations").Get<MailConfigurations>();
             services.AddSingleton(mailconfig);
+
+            // client app setting values
+            var clientApp = _configuration.GetSection("ClientApp").Get<ClientApp>();
+            services.AddSingleton(clientApp);
 
             // Register Jwt service
             services.AddSingleton<IJwtService       , JwtService>();

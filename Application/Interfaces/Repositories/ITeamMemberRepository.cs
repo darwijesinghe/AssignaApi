@@ -10,7 +10,7 @@ namespace Application.Interfaces.Repositories
     public interface ITeamMemberRepository
     {
         /// <summary>
-        /// Adds a note to a task.
+        /// Adds a user note to a task.
         /// </summary>
         /// <param name="data">The data containing the task information and the note to be added.</param>
         /// <returns>

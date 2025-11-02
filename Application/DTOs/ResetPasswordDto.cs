@@ -10,7 +10,8 @@ namespace Application.DTOs
         /// <summary>
         /// Password
         /// </summary>
-        [RegularExpression(@"^(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}$")]
+        [RegularExpression(@"^(?=.*\d)(?=.*[#$^+=!*()@%&]).{5,}$",
+        ErrorMessage = "Passwords must contain at least five characters, including at least 1 letter and 1 number")]
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Password is required")]
         public string Password    { get; set; }
@@ -19,7 +20,7 @@ namespace Application.DTOs
         /// Confirm password
         /// </summary>
         [Required(ErrorMessage = "Confirm password is required"),
-        Compare("password", ErrorMessage = "Confirm password does not match")]
+        Compare("Password", ErrorMessage = "Confirm password does not match")]
         public string ConPassword { get; set; }
 
         /// <summary>

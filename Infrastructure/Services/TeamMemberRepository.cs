@@ -22,7 +22,7 @@ namespace Infrastructure.Services
         }
 
         /// <summary>
-        /// Adds a note to a task.
+        /// Adds a user note to a task.
         /// </summary>
         /// <param name="data">The data containing the task information and the note to be added.</param>
         /// <returns>
@@ -37,8 +37,8 @@ namespace Infrastructure.Services
                 if (task is null)
                     return new Result { Message = "Task not found.", Success = false };
 
-                // task note
-                task.TaskNote = data.UserNote;
+                // user note
+                task.UserNote = data.UserNote;
 
                 await _context.SaveChangesAsync();
                 return new Result

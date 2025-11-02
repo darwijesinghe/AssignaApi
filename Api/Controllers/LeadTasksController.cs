@@ -18,7 +18,7 @@ namespace AssignaApi.Controllers
         // Services
         private readonly ITaskService     _taskService;
         private readonly ITeamLeadService _teamLeadService;
-        private IMailService              _mailService;
+        private readonly IMailService     _mailService;
 
         public LeadTasksController(ITeamLeadService teamLeadService, ITaskService taskService, IMailService mailService)
         {
@@ -41,7 +41,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -59,7 +61,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -77,7 +81,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -95,7 +101,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -113,7 +121,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -131,7 +141,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 
@@ -155,7 +167,9 @@ namespace AssignaApi.Controllers
 
             return new JsonResult(new
             {
-                data = result
+                message = "Ok.",
+                success = true,
+                data    = result
             });
         }
 

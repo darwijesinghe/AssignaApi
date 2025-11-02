@@ -40,6 +40,7 @@ namespace Application.Services
                 // user note data of task
                 var task = new Task()
                 {
+                    TaskId   = data.TaskId,
                     UserNote = data.UserNote
                 };
 

@@ -329,10 +329,12 @@ namespace Application.Services
                 MediumPriority = task.MediumPriority,
                 LowPriority    = task.LowPriority,
                 UserNote       = task.UserNote,
-                CatId          = task.CatId,
+                CatId          = task.Category.CatId,
+                CatName        = task.Category.CatName,
                 UserId         = task.UserId,
                 UserName       = task.User.UserName,
-                FirstName      = task.User.FirstName
+                FirstName      = task.User.FirstName,
+                UserMail       = task.User.UserMail
             };
         }
     }
